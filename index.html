@@ -1,386 +1,956 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIDWELT</title>
-<meta property="og:title" content="MIDWELT">
-<meta property="og:description" content="MidWelt is not a company. It is a territory.">
-<meta property="og:url" content="https://www.midwelt.com/">
-<meta property="og:type" content="website">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-* {
-    box-sizing: border-box;
-}
+  <title>MIDWELT — Artists × Brands</title>
+  <meta
+    name="description"
+    content="MidWelt is a new territory between artists and brands."
+  />
 
-html,
-body {
-    margin: 0;
-    width: 100%;
-    min-height: 100%;
-    background: #050505;
-}
+  <meta property="og:title" content="MIDWELT" />
+  <meta property="og:description" content="A new territory between artists and brands." />
+  <meta property="og:url" content="https://www.midwelt.com/" />
+  <meta property="og:type" content="website" />
 
-body {
-    min-height: 100vh;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-}
+  <meta property="og:image" content="https://www.midwelt.com/preview_midwelt_text.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://www.midwelt.com/preview_midwelt_text.png" />
 
-/* =========================
-   PAGE
-========================= */
-
-.page {
-    width: 100%;
-    height: 100vh;
-    min-height: 100vh;
-    background: #050505;
-    color: white;
-    text-transform: uppercase;
-    overflow: hidden;
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-
-@keyframes pinkMove {
-    0% {
-        transform: translate(0px, 0px) scale(1) rotate(0deg);
+  <style>
+    :root {
+      --black: #050505;
+      --white: #f4f4f1;
+      --green: #beff00;
+      --pink: #ff14c8;
+      --pad: clamp(20px, 4vw, 64px);
+      --content: 1440px;
     }
 
-    50% {
-        transform: translate(-60px, 40px) scale(1.15) rotate(12deg);
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--black);
+      scroll-behavior: smooth;
     }
 
-    100% {
-        transform: translate(0px, 0px) scale(1) rotate(0deg);
-    }
-}
-
-@keyframes greenMove {
-    0% {
-        transform: translate(0px, 0px) scale(1) rotate(0deg);
-    }
-
-    50% {
-        transform: translate(50px, -50px) scale(1.2) rotate(-15deg);
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--black);
+      color: var(--white);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
-    100% {
-        transform: translate(0px, 0px) scale(1) rotate(0deg);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 0.7;
+    ::selection {
+      background: var(--green);
+      color: var(--black);
     }
 
-    50% {
-        opacity: 1;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-}
 
-/* =========================
-   BACKGROUND SHAPES
-========================= */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--black);
+    }
 
-.pink-glow {
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    border-radius: 50%;
-    background:
+    .glow {
+      position: absolute;
+      width: min(72vw, 980px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+      will-change: transform, opacity;
+    }
+
+    .glow--pink {
+      top: -34vw;
+      right: -24vw;
+      background:
         radial-gradient(
-            circle,
-            rgba(255,20,200,0.45) 0%,
-            rgba(255,20,200,0.15) 35%,
-            transparent 70%
+          circle,
+          rgba(255, 20, 200, 0.48) 0%,
+          rgba(255, 20, 200, 0.16) 36%,
+          rgba(255, 20, 200, 0.035) 56%,
+          transparent 73%
         );
-    top: -300px;
-    right: -150px;
-    filter: blur(20px);
-    animation: pinkMove 10s ease-in-out infinite;
-}
+      filter: blur(18px);
+    }
 
-.green-glow {
-    position: absolute;
-    width: 650px;
-    height: 650px;
-    border-radius: 50%;
-    background:
+    .glow--green {
+      left: -27vw;
+      bottom: -35vw;
+      background:
         radial-gradient(
-            circle,
-            rgba(190,255,0,0.35) 0%,
-            rgba(190,255,0,0.12) 35%,
-            transparent 70%
+          circle,
+          rgba(190, 255, 0, 0.42) 0%,
+          rgba(190, 255, 0, 0.14) 36%,
+          rgba(190, 255, 0, 0.03) 56%,
+          transparent 73%
         );
-    bottom: -300px;
-    left: -150px;
-    filter: blur(25px);
-    animation: greenMove 13s ease-in-out infinite;
-}
-
-.pink-shape {
-    position: absolute;
-    width: 300px;
-    height: 450px;
-    background: #FF14C8;
-    right: 15%;
-    top: 25%;
-    border-radius: 50% 40% 60% 45%;
-    filter: blur(70px);
-    opacity: 0.12;
-    animation: pinkMove 14s ease-in-out infinite;
-}
-
-.green-shape {
-    position: absolute;
-    width: 280px;
-    height: 420px;
-    background: #BEFF00;
-    left: 8%;
-    bottom: 10%;
-    border-radius: 40% 60% 45% 55%;
-    filter: blur(75px);
-    opacity: 0.1;
-    animation: greenMove 17s ease-in-out infinite;
-}
-
-/* =========================
-   HEADER
-========================= */
-
-header {
-    position: relative;
-    z-index: 5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 32px 42px;
-}
-
-.logo {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    white-space: nowrap;
-}
-
-.domain {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    opacity: 0.5;
-}
-
-/* =========================
-   MAIN
-========================= */
-
-main {
-    position: relative;
-    z-index: 5;
-    max-width: 1100px;
-    width: 100%;
-    margin: auto;
-    padding: 60px 42px;
-}
-
-.eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    color: #BEFF00;
-    margin-bottom: 55px;
-}
-
-.statement {
-    font-size: clamp(28px, 4vw, 55px);
-    line-height: 1.03;
-    letter-spacing: -0.045em;
-    max-width: 850px;
-    margin-bottom: 35px;
-}
-
-.statement .pink {
-    color: #FF14C8;
-}
-
-.description {
-    font-size: 15px;
-    line-height: 1.5;
-    max-width: 600px;
-    opacity: 0.6;
-    margin: 0;
-    white-space: nowrap;
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-footer {
-    position: relative;
-    z-index: 5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 28px 42px;
-    border-top: 1px solid rgba(255,255,255,0.12);
-}
-
-.coming-soon {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 18px;
-    letter-spacing: 0.18em;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
-
-    .page {
-        height: 100vh;
-        min-height: 100vh;
+      filter: blur(20px);
     }
 
-    header {
-        padding: 20px 18px;
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.035;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      mix-blend-mode: soft-light;
     }
 
-    .logo {
-        font-size: 15px;
+    .section {
+      position: relative;
+      z-index: 2;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 100px var(--pad) 64px;
     }
 
-    .domain {
-        font-size: 9px;
+    .inner {
+      width: min(100%, var(--content));
+      margin: 0 auto;
     }
 
-    main {
-        padding: 34px 18px;
+    .display {
+      margin: 0;
+      padding-block: 0.04em;
+      max-width: 1320px;
+      font-size: clamp(52px, 9vw, 150px);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
-    .eyebrow {
-        font-size: 9px;
-        letter-spacing: 0.22em;
-        margin-bottom: 28px;
+    .display--medium {
+      font-size: clamp(46px, 7vw, 112px);
+      line-height: 0.96;
     }
 
-    .statement {
-        font-size: clamp(23px, 8vw, 34px);
-        line-height: 1.03;
-        letter-spacing: -0.045em;
-        margin-bottom: 22px;
+    .display--small {
+      font-size: clamp(38px, 5.6vw, 88px);
+      line-height: 0.98;
     }
 
-    .description {
-        font-size: 13px;
-        line-height: 1.5;
-        max-width: 100%;
-        white-space: normal;
+    .white { color: var(--white); }
+    .green { color: var(--green); }
+    .pink { color: var(--pink); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity 850ms cubic-bezier(.16, 1, .3, 1),
+        transform 850ms cubic-bezier(.16, 1, .3, 1);
     }
 
-    footer {
-        padding: 20px 18px;
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
+    /* HERO */
+    .hero {
+      min-height: 112svh;
+      align-items: flex-end;
+      padding-bottom: clamp(80px, 12vh, 150px);
+    }
+
+    .hero-title {
+      max-width: 1260px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    /* WORLD HAS CHANGED */
+    .world {
+      min-height: 150svh;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: stretch;
+    }
+
+    .world-stage {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .world-lines {
+      width: 100%;
+      text-align: center;
+    }
+
+    .world-line {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(36px, 6.4vw, 102px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.16;
+      transition:
+        opacity 320ms ease,
+        transform 520ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .world-line + .world-line { margin-top: 0.12em; }
+
+    .world-line.active {
+      opacity: 1;
+      transform: scale(1.015);
+    }
+
+    .world-line--nowrap {
+      white-space: nowrap;
+      font-size: clamp(30px, 5.35vw, 86px);
+    }
+
+    /* ARTISTS / BRANDS */
+    .between {
+      min-height: 135svh;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: stretch;
+    }
+
+    .between-stage {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .between-stage > .inner {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .between-layout {
+      position: relative;
+      width: 100%;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .world-lockup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(14px, 2vw, 32px);
+      width: auto;
+      max-width: calc(100vw - (2 * var(--pad)));
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .side {
+      flex: 0 0 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .world-word {
+      margin: 0;
+      padding-block: 0.04em;
+      color: var(--white);
+      font-size: clamp(42px, 6.7vw, 108px);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+      will-change: transform, opacity;
+    }
+
+    .separator {
+      width: 1px;
+      height: clamp(220px, 44vh, 480px);
+      background: var(--white);
+      transform: scaleY(.55);
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+
+    .between-message {
+      position: absolute;
+      left: 50%;
+      top: calc(50% + clamp(105px, 12vw, 170px));
+      width: min(980px, 92vw);
+      transform: translateX(-50%) translateY(20px);
+      text-align: center;
+      opacity: 0;
+      overflow: visible;
+      will-change: transform, opacity;
+    }
+
+    .between-message h2 {
+      display: block;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .between-message h2 {
+      margin: 0;
+      padding: 0.12em 0 0.16em;
+      color: var(--pink);
+      font-size: clamp(36px, 5.8vw, 92px);
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: visible;
+    }
+
+    .between-message p {
+      max-width: 660px;
+      margin: 24px auto 0;
+      color: var(--white);
+      font-size: clamp(16px, 1.25vw, 20px);
+      line-height: 1.45;
+    }
+
+    /* WHAT IS MIDWELT */
+    .what {
+      min-height: 118svh;
+      text-align: center;
+    }
+
+    .what-copy {
+      margin: clamp(40px, 7vh, 78px) auto 0;
+      max-width: 980px;
+      color: var(--white);
+      font-size: clamp(24px, 2.7vw, 40px);
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      text-align: center;
+    }
+
+
+    .intermediary {
+      margin-top: 30px;
+      color: var(--white);
+      font-size: clamp(34px, 4.2vw, 68px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* DIFFERENCE */
+    .difference {
+      min-height: 150svh;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: stretch;
+    }
+
+    .difference-stage {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .difference-stage .inner {
+      width: 100%;
+      max-width: none;
+      overflow: visible;
+      text-align: center;
+      margin: 0;
+      padding-left: var(--pad);
+      padding-right: var(--pad);
+    }
+
+    .difference-old,
+    .difference-new {
+      margin: 0;
+      max-width: 1320px;
+      color: var(--white);
+      font-size: clamp(42px, 7.4vw, 122px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      font-weight: 700;
+      text-transform: uppercase;
+      will-change: opacity, transform;
+    }
+
+    .difference-new { margin-top: 24px; }
+
+    .difference-lockup {
+      display: inline-block;
+      white-space: nowrap;
+      font-size: clamp(24px, 6.1vw, 96px);
+      line-height: 1;
+      letter-spacing: -0.065em;
+      max-width: 100%;
+    }
+
+    /* FUTURE */
+    .future {
+      min-height: 90svh;
+      align-items: center;
+      padding-bottom: clamp(40px, 7vh, 70px);
+    }
+
+    .future-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(28px, 6vw, 90px);
+      max-width: 1160px;
+      margin: 0 auto;
+      text-align: center;
+      align-items: start;
+    }
+
+    .future-pair p {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(25px, 3vw, 46px);
+      line-height: 1.04;
+      letter-spacing: -0.045em;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+
+    /* CONTACT */
+    .contact {
+      min-height: 92svh;
+      align-items: flex-end;
+      padding-bottom: clamp(70px, 10vh, 120px);
+    }
+
+    .contact-title {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(52px, 9vw, 150px);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .contact-link {
+      display: inline-block;
+      margin-top: clamp(46px, 8vh, 84px);
+      color: var(--white);
+      font-size: clamp(24px, 3.2vw, 52px);
+      line-height: 1;
+      letter-spacing: -0.045em;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 8px;
+      transition: color 180ms ease;
+    }
+
+    .contact-link:hover {
+      color: var(--green);
+    }
+
+
+
+    /* FINAL / COMING SOON */
     .coming-soon {
-        font-size: 15px;
-        letter-spacing: 0.18em;
+      position: relative;
+      width: 100vw;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px var(--pad) 64px;
+      text-align: center;
+      margin-left: calc(50% - 50vw);
     }
 
-    .pink-shape {
-        right: -100px;
+    .coming-soon > .inner {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
     }
 
-    .green-shape {
-        left: -100px;
+    .coming-soon-inner {
+      width: 100%;
+      max-width: none;
+      min-height: 74svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      text-align: center;
     }
-}
-</style>
+
+    .coming-soon-stack {
+      width: 100%;
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(84px, 13vh, 150px);
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .coming-soon-lead,
+    .coming-soon-text {
+      display: block;
+      width: 100vw;
+      max-width: none;
+      margin: 0;
+      text-align: center;
+      align-self: center;
+    }
+
+    .coming-soon-lead {
+      color: var(--green);
+    }
+
+    .coming-soon-text {
+      color: var(--pink);
+    }
+
+    @media (max-width: 760px) {
+      :root { --pad: 18px; }
+
+      .site-header { padding-top: 18px; }
+
+      .section {
+        padding-top: 90px;
+        padding-bottom: 42px;
+      }
+
+      .hero {
+        min-height: 100svh;
+        padding-bottom: 58px;
+      }
+
+      .display {
+        font-size: clamp(46px, 15.5vw, 74px);
+        line-height: 0.95;
+      }
+
+      .display--medium {
+        font-size: clamp(40px, 12.7vw, 62px);
+      }
+
+      .display--small {
+        font-size: clamp(36px, 11vw, 54px);
+      }
+
+      .world { min-height: 142svh; }
+
+      .world-line {
+        font-size: clamp(30px, 9vw, 48px);
+      }
+
+      .world-line--nowrap {
+        font-size: clamp(20px, 6.65vw, 34px);
+        letter-spacing: -0.045em;
+      }
+
+      .between { min-height: 125svh; }
+
+      .between-layout {
+        min-height: 100svh;
+      }
+
+      .world-word {
+        font-size: clamp(27px, 7.6vw, 40px);
+      }
+
+      .world-lockup {
+        max-width: 96vw;
+        gap: 8px;
+      }
+
+
+      .separator { height: 280px; }
+
+      .between-message {
+        top: calc(50% + 82px);
+        width: 94vw;
+      }
+
+      .between-message h2 {
+        line-height: 1.08;
+        padding-bottom: 0.20em;
+      }
+
+      .what { min-height: 110svh; }
+
+      .what-copy {
+        font-size: clamp(22px, 6.8vw, 32px);
+        text-align: center;
+      }
+
+
+      .difference-old,
+      .difference-new {
+        font-size: clamp(36px, 11vw, 58px);
+      }
+
+      .future {
+        min-height: 72svh;
+      }
+
+      .future-pair {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .coming-soon {
+        min-height: 86svh;
+        padding: 28px var(--pad) 42px;
+      }
+
+      .coming-soon-inner {
+        min-height: 68svh;
+      }
+
+      .coming-soon-stack {
+        gap: clamp(62px, 10vh, 92px);
+      }
+
+    }
+
+      .coming-soon {
+        min-height: 82svh;
+        padding-bottom: 34px;
+      }
+
+      .coming-soon-inner {
+        min-height: 62svh;
+      }
+
+      .coming-soon-text {
+      color: var(--pink);
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="ambient" aria-hidden="true">
+    <div class="glow glow--pink" id="pinkGlow"></div>
+    <div class="glow glow--green" id="greenGlow"></div>
+    <div class="noise"></div>
+  </div>
 
-<div class="page">
+  <main id="top">
 
-    <!-- PINK GLOW -->
-    <div class="pink-glow"></div>
+    <section class="section hero">
+      <div class="inner">
+        <h1 class="display hero-title reveal">
+          A NEW <span class="green">TERRITORY</span><br />
+          BETWEEN ARTISTS<br />
+          AND BRANDS.
+        </h1>
+      </div>
+    </section>
 
-    <!-- GREEN GLOW -->
-    <div class="green-glow"></div>
-
-    <!-- PINK ORGANIC SHAPE -->
-    <div class="pink-shape"></div>
-
-    <!-- GREEN ORGANIC SHAPE -->
-    <div class="green-shape"></div>
-
-
-    <!-- HEADER -->
-    <header>
-
-        <div class="logo">
-            MIDWELT
+    <section class="section world" id="worldSection">
+      <div class="world-stage">
+        <div class="inner world-lines">
+          <p class="world-line">AI GENERATES IMAGES.</p>
+          <p class="world-line world-line--nowrap">ALGORITHMS OPTIMIZE ATTENTION.</p>
+          <p class="world-line">CONTENT IS INFINITE.</p>
+          <p class="world-line"><span class="pink">AUTHENTICITY</span> ISN'T.</p>
         </div>
+      </div>
+    </section>
 
-        <div class="domain">
-            MIDWELT.COM
+    <section class="section between" id="betweenSection">
+      <div class="between-stage">
+        <div class="inner">
+          <div class="between-layout">
+            <div class="world-lockup">
+              <div class="side side--artists">
+                <p class="world-word" id="artistsWord">ARTISTS</p>
+              </div>
+
+              <div class="separator" id="middleLine"></div>
+
+              <div class="side side--brands">
+                <p class="world-word" id="brandsWord">BRANDS</p>
+              </div>
+            </div>
+
+            <div class="between-message" id="betweenMessage">
+              <h2 class="pink">MIDWELT EXISTS IN BETWEEN.</h2>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-    </header>
+    <section class="section what">
+      <div class="inner">
+        <h2 class="display display--medium reveal">
+          A PLATFORM FOR<br />
+          CREATIVE <span class="pink">COLLABORATION.</span>
+        </h2>
 
-
-    <!-- MAIN -->
-    <main>
-
-        <div class="eyebrow">
-            A NEW TERRITORY IS TAKING SHAPE
-        </div>
-
-        <div class="statement">
-
-            <span>
-                MidWelt is not a company.
-            </span>
-
-            <br>
-
-            <span class="pink">
-                It is a territory.
-            </span>
-
-        </div>
-
-        <p class="description">
-            A place where artists and brands meet without changing who they are.
+        <p class="what-copy reveal">
+          AUTHENTICITY WITHOUT COMPROMISE.
         </p>
 
-    </main>
+        <p class="intermediary reveal">
+          A CULTURAL <span class="green">INTERMEDIARY.</span>
+        </p>
+      </div>
+    </section>
 
+    <section class="section difference" id="differenceSection">
+      <div class="difference-stage">
+        <div class="inner">
+          <p class="difference-old" id="differenceOld">
+            WE DON'T CREATE<br />
+            CAMPAIGNS FOR ARTISTS.
+          </p>
 
-    <!-- FOOTER -->
-    <footer>
+          <p class="difference-new" id="differenceNew">
+            WE CREATE<br />
+            <span class="difference-lockup pink">COLLABORATIONS WITH THEM.</span>
+          </p>
+        </div>
+      </div>
+    </section>
 
-        <div class="coming-soon">
-            COMING SOON
+    <section class="section future">
+      <div class="inner">
+        <div class="future-pair reveal">
+          <p class="pink">Artists become creative partners.</p>
+          <p class="pink">Businesses become cultural contributors.</p>
         </div>
 
-    </footer>
 
-</div>
+      </div>
+    </section>
 
+    <section class="section coming-soon">
+      <div class="inner coming-soon-inner reveal">
+        <div class="coming-soon-stack">
+          <div class="coming-soon-lead display display--small">A NEW TERRITORY</div>
+          <div class="coming-soon-text display display--small">COMING SOON</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (() => {
+      const clamp = (value, min = 0, max = 1) =>
+        Math.min(max, Math.max(min, value));
+
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const easeInOut = (t) => t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const progressInSection = (section) => {
+        const rect = section.getBoundingClientRect();
+        const travel = rect.height - window.innerHeight;
+        if (travel <= 0) return 0;
+        return clamp(-rect.top / travel);
+      };
+
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.14 }
+      );
+
+      document.querySelectorAll(".reveal").forEach((el) => {
+        revealObserver.observe(el);
+      });
+
+      const pinkGlow = document.getElementById("pinkGlow");
+      const greenGlow = document.getElementById("greenGlow");
+
+      const worldSection = document.getElementById("worldSection");
+      const worldLines = [...document.querySelectorAll(".world-line")];
+
+      const betweenSection = document.getElementById("betweenSection");
+      const artistsWord = document.getElementById("artistsWord");
+      const brandsWord = document.getElementById("brandsWord");
+      const middleLine = document.getElementById("middleLine");
+      const betweenMessage = document.getElementById("betweenMessage");
+
+      const differenceSection = document.getElementById("differenceSection");
+      const differenceOld = document.getElementById("differenceOld");
+      const differenceNew = document.getElementById("differenceNew");
+
+      let ticking = false;
+
+      function update() {
+        ticking = false;
+
+        const doc = document.documentElement;
+        const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+        const global = clamp(window.scrollY / maxScroll);
+
+        const meeting =
+          1 - Math.min(1, Math.abs(global - 0.42) / 0.20);
+
+        // Pull both glows lower near the end so COMING SOON stays cleaner.
+        const endDrop = clamp((global - 0.82) / 0.18);
+
+        // More visible motion across the full page, with a stronger convergence
+        // around the ARTISTS / BRANDS scene.
+        const pinkX =
+          -8 - global * 28 - meeting * 23 +
+          Math.sin(global * Math.PI * 5.2) * 10;
+
+        const pinkY =
+          5 + global * 34 + meeting * 14 +
+          Math.cos(global * Math.PI * 4.0) * 8 +
+          endDrop * 18;
+
+        const greenX =
+          7 + global * 25 + meeting * 24 -
+          Math.cos(global * Math.PI * 4.8) * 10;
+
+        const greenY =
+          -4 - global * 27 - meeting * 12 -
+          Math.sin(global * Math.PI * 3.8) * 8 +
+          endDrop * 22;
+
+        const pulse = 0.06 * Math.sin(global * Math.PI * 6);
+
+        pinkGlow.style.transform =
+          `translate3d(${pinkX}vw, ${pinkY}vh, 0) scale(${1.02 + meeting * 0.28 + pulse})`;
+
+        greenGlow.style.transform =
+          `translate3d(${greenX}vw, ${greenY}vh, 0) scale(${1.04 + meeting * 0.30 - pulse})`;
+
+        pinkGlow.style.opacity = String(0.78 + meeting * 0.16 - endDrop * 0.10);
+        greenGlow.style.opacity = String(0.76 + meeting * 0.16 - endDrop * 0.12);
+
+        const worldProgress = progressInSection(worldSection);
+
+        const activeIndex = Math.min(
+          worldLines.length - 1,
+          Math.floor(worldProgress * worldLines.length)
+        );
+
+        worldLines.forEach((line, index) => {
+          line.classList.toggle("active", index === activeIndex);
+        });
+
+        const betweenProgress = progressInSection(betweenSection);
+        const meet = clamp((betweenProgress - 0.04) / 0.34);
+        const revealMessage = clamp((betweenProgress - 0.39) / 0.17);
+
+        const smoothMeet = easeInOut(meet);
+        const smoothReveal = easeInOut(revealMessage);
+
+        const mobile = window.innerWidth <= 760;
+        const movement = mobile ? 4.2 : 6.2;
+
+        artistsWord.style.transform =
+          `translateX(${smoothMeet * movement}vw) scale(${1 + smoothMeet * 0.015})`;
+
+        brandsWord.style.transform =
+          `translateX(${-smoothMeet * movement}vw) scale(${1 + smoothMeet * 0.015})`;
+
+        const wordOpacity = lerp(1, 0.18, smoothReveal);
+        artistsWord.style.opacity = String(wordOpacity);
+        brandsWord.style.opacity = String(wordOpacity);
+
+        middleLine.style.transform =
+          `scaleY(${lerp(.55, 1, smoothMeet)})`;
+
+        const lineFade = 1 - clamp(smoothReveal * 1.45);
+        middleLine.style.opacity =
+          String(lerp(.55, 1, smoothMeet) * lineFade);
+
+        betweenMessage.style.opacity =
+          String(smoothReveal);
+
+        betweenMessage.style.transform =
+          `translateX(-50%) translateY(${lerp(20, 0, smoothReveal)}px)`;
+
+        const differenceProgress = progressInSection(differenceSection);
+
+        const oldFade =
+          clamp((differenceProgress - 0.08) / 0.42);
+
+        const newRise =
+          clamp((differenceProgress - 0.28) / 0.38);
+
+        differenceOld.style.opacity =
+          String(lerp(1, 0.20, oldFade));
+
+        differenceOld.style.transform =
+          `translateY(${lerp(0, -18, oldFade)}px)`;
+
+        differenceNew.style.opacity =
+          String(lerp(0.18, 1, newRise));
+
+        differenceNew.style.transform =
+          `translateY(${lerp(22, 0, newRise)}px)`;
+      }
+
+      function requestUpdate() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      }
+
+      window.addEventListener("scroll", requestUpdate, { passive: true });
+      window.addEventListener("resize", requestUpdate);
+
+      update();
+    })();
+  </script>
 </body>
 </html>
-
