@@ -1,277 +1,382 @@
-import * as React from "react"
-import { startTransition, useEffect, useState } from "react"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIDWELT</title>
 
-export default function MidWelt() {
-    const [isMobile, setIsMobile] = useState(false)
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const checkIsMobile = () => {
-                startTransition(() => {
-                    setIsMobile(window.innerWidth <= 600)
-                })
-            }
-
-            checkIsMobile()
-            window.addEventListener("resize", checkIsMobile)
-
-            return () => {
-                window.removeEventListener("resize", checkIsMobile)
-            }
-        }
-    }, [])
-
-    useEffect(() => {
-        if (typeof document === "undefined") return
-
-        const style = document.createElement("style")
-        style.innerHTML = `
-            @keyframes pinkMove {
-                0% {
-                    transform: translate(0px, 0px) scale(1) rotate(0deg);
-                }
-                50% {
-                    transform: translate(-60px, 40px) scale(1.15) rotate(12deg);
-                }
-                100% {
-                    transform: translate(0px, 0px) scale(1) rotate(0deg);
-                }
-            }
-
-            @keyframes greenMove {
-                0% {
-                    transform: translate(0px, 0px) scale(1) rotate(0deg);
-                }
-                50% {
-                    transform: translate(50px, -50px) scale(1.2) rotate(-15deg);
-                }
-                100% {
-                    transform: translate(0px, 0px) scale(1) rotate(0deg);
-                }
-            }
-
-            @keyframes pulse {
-                0%, 100% {
-                    opacity: 0.7;
-                }
-                50% {
-                    opacity: 1;
-                }
-            }
-        `
-        document.head.appendChild(style)
-
-        return () => {
-            document.head.removeChild(style)
-        }
-    }, [])
-
-    return (
-        <div
-            style={{
-                width: "100%",
-                height: "100%",
-                minHeight: "100vh",
-                background: "#050505",
-                color: "white",
-                textTransform: "uppercase",
-                overflow: "hidden",
-                position: "relative",
-                fontFamily: "Arial, Helvetica, sans-serif",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-            }}
-        >
-            {/* PINK GLOW */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "700px",
-                    height: "700px",
-                    borderRadius: "50%",
-                    background:
-                        "radial-gradient(circle, rgba(255,20,200,0.45) 0%, rgba(255,20,200,0.15) 35%, transparent 70%)",
-                    top: "-300px",
-                    right: "-150px",
-                    filter: "blur(20px)",
-                    animation: "pinkMove 10s ease-in-out infinite",
-                }}
-            />
-
-            {/* GREEN GLOW */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "650px",
-                    height: "650px",
-                    borderRadius: "50%",
-                    background:
-                        "radial-gradient(circle, rgba(190,255,0,0.35) 0%, rgba(190,255,0,0.12) 35%, transparent 70%)",
-                    bottom: "-300px",
-                    left: "-150px",
-                    filter: "blur(25px)",
-                    animation: "greenMove 13s ease-in-out infinite",
-                }}
-            />
-
-            {/* PINK ORGANIC SHAPE */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "300px",
-                    height: "450px",
-                    background: "#FF14C8",
-                    right: "15%",
-                    top: "25%",
-                    borderRadius: "50% 40% 60% 45%",
-                    filter: "blur(70px)",
-                    opacity: 0.12,
-                    animation: "pinkMove 14s ease-in-out infinite",
-                }}
-            />
-
-            {/* GREEN ORGANIC SHAPE */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "280px",
-                    height: "420px",
-                    background: "#BEFF00",
-                    left: "8%",
-                    bottom: "10%",
-                    borderRadius: "40% 60% 45% 55%",
-                    filter: "blur(75px)",
-                    opacity: 0.1,
-                    animation: "greenMove 17s ease-in-out infinite",
-                }}
-            />
-
-            {/* HEADER */}
-            <header
-                style={{
-                    position: "relative",
-                    zIndex: 5,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: isMobile ? "20px 18px" : "32px 42px",
-                }}
-            >
-                <div
-                    style={{
-                        fontSize: isMobile ? "15px" : "18px",
-                        fontWeight: 800,
-                        letterSpacing: "-0.04em",
-                        whiteSpace: "nowrap",
-                    }}
-                >
-                    MIDWELT
-                </div>
-
-                <div
-                    style={{
-                        fontSize: isMobile ? "9px" : "10px",
-                        letterSpacing: "0.2em",
-                        opacity: 0.5,
-                    }}
-                >
-                    MIDWELT.COM
-                </div>
-            </header>
-
-            {/* MAIN */}
-            <main
-                style={{
-                    position: "relative",
-                    zIndex: 5,
-                    maxWidth: "1100px",
-                    width: "100%",
-                    margin: "auto",
-                    padding: isMobile ? "34px 18px" : "60px 42px",
-                    boxSizing: "border-box",
-                }}
-            >
-                <div
-                    style={{
-                        fontSize: isMobile ? "9px" : "10px",
-                        letterSpacing: "0.22em",
-                        color: "#BEFF00",
-                        marginBottom: isMobile ? "28px" : "55px",
-                    }}
-                >
-                    A NEW TERRITORY IS TAKING SHAPE
-                </div>
-
-                <div
-                    style={{
-                        fontSize: isMobile
-                            ? "clamp(23px, 8vw, 34px)"
-                            : "clamp(28px, 4vw, 55px)",
-                        lineHeight: "1.03",
-                        letterSpacing: "-0.045em",
-                        maxWidth: "850px",
-                        marginBottom: isMobile ? "22px" : "35px",
-                    }}
-                >
-                    <span
-                        style={{
-                            whiteSpace: isMobile ? "normal" : "nowrap",
-                            display: "inline",
-                        }}
-                    >
-                        MidWelt is not a company.
-                    </span>
-                    <br />
-                    <span
-                        style={{
-                            color: "#FF14C8",
-                        }}
-                    >
-                        It is a territory.
-                    </span>
-                </div>
-
-                <p
-                    style={{
-                        fontSize: isMobile ? "13px" : "15px",
-                        lineHeight: "1.5",
-                        maxWidth: "600px",
-                        opacity: 0.6,
-                        margin: 0,
-                        whiteSpace: isMobile ? "normal" : "nowrap",
-                    }}
-                >
-                    A place where artists and brands meet without changing who
-                    they are.
-                </p>
-            </main>
-
-            {/* FOOTER */}
-            <footer
-                style={{
-                    position: "relative",
-                    zIndex: 5,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: isMobile ? "20px 18px" : "28px 42px",
-                    borderTop: "1px solid rgba(255,255,255,0.12)",
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                        fontSize: isMobile ? "15px" : "18px",
-                        letterSpacing: "0.18em",
-                    }}
-                >
-                    COMING SOON
-                </div>
-            </footer>
-        </div>
-    )
+<style>
+* {
+    box-sizing: border-box;
 }
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #050505;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page {
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    background: #050505;
+    color: white;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes pinkMove {
+    0% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(-60px, 40px) scale(1.15) rotate(12deg);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes greenMove {
+    0% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(50px, -50px) scale(1.2) rotate(-15deg);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* =========================
+   BACKGROUND SHAPES
+========================= */
+
+.pink-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,20,200,0.45) 0%,
+            rgba(255,20,200,0.15) 35%,
+            transparent 70%
+        );
+    top: -300px;
+    right: -150px;
+    filter: blur(20px);
+    animation: pinkMove 10s ease-in-out infinite;
+}
+
+.green-glow {
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(190,255,0,0.35) 0%,
+            rgba(190,255,0,0.12) 35%,
+            transparent 70%
+        );
+    bottom: -300px;
+    left: -150px;
+    filter: blur(25px);
+    animation: greenMove 13s ease-in-out infinite;
+}
+
+.pink-shape {
+    position: absolute;
+    width: 300px;
+    height: 450px;
+    background: #FF14C8;
+    right: 15%;
+    top: 25%;
+    border-radius: 50% 40% 60% 45%;
+    filter: blur(70px);
+    opacity: 0.12;
+    animation: pinkMove 14s ease-in-out infinite;
+}
+
+.green-shape {
+    position: absolute;
+    width: 280px;
+    height: 420px;
+    background: #BEFF00;
+    left: 8%;
+    bottom: 10%;
+    border-radius: 40% 60% 45% 55%;
+    filter: blur(75px);
+    opacity: 0.1;
+    animation: greenMove 17s ease-in-out infinite;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 42px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+}
+
+.domain {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    opacity: 0.5;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    position: relative;
+    z-index: 5;
+    max-width: 1100px;
+    width: 100%;
+    margin: auto;
+    padding: 60px 42px;
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: #BEFF00;
+    margin-bottom: 55px;
+}
+
+.statement {
+    font-size: clamp(28px, 4vw, 55px);
+    line-height: 1.03;
+    letter-spacing: -0.045em;
+    max-width: 850px;
+    margin-bottom: 35px;
+}
+
+.statement .pink {
+    color: #FF14C8;
+}
+
+.description {
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 600px;
+    opacity: 0.6;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 42px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.coming-soon {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .page {
+        height: 100vh;
+        min-height: 100vh;
+    }
+
+    header {
+        padding: 20px 18px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .domain {
+        font-size: 9px;
+    }
+
+    main {
+        padding: 34px 18px;
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        margin-bottom: 28px;
+    }
+
+    .statement {
+        font-size: clamp(23px, 8vw, 34px);
+        line-height: 1.03;
+        letter-spacing: -0.045em;
+        margin-bottom: 22px;
+    }
+
+    .description {
+        font-size: 13px;
+        line-height: 1.5;
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    footer {
+        padding: 20px 18px;
+    }
+
+    .coming-soon {
+        font-size: 15px;
+        letter-spacing: 0.18em;
+    }
+
+    .pink-shape {
+        right: -100px;
+    }
+
+    .green-shape {
+        left: -100px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- PINK GLOW -->
+    <div class="pink-glow"></div>
+
+    <!-- GREEN GLOW -->
+    <div class="green-glow"></div>
+
+    <!-- PINK ORGANIC SHAPE -->
+    <div class="pink-shape"></div>
+
+    <!-- GREEN ORGANIC SHAPE -->
+    <div class="green-shape"></div>
+
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="logo">
+            MIDWELT
+        </div>
+
+        <div class="domain">
+            MIDWELT.COM
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main>
+
+        <div class="eyebrow">
+            A NEW TERRITORY IS TAKING SHAPE
+        </div>
+
+        <div class="statement">
+
+            <span>
+                MidWelt is not a company.
+            </span>
+
+            <br>
+
+            <span class="pink">
+                It is a territory.
+            </span>
+
+        </div>
+
+        <p class="description">
+            A place where artists and brands meet without changing who they are.
+        </p>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="coming-soon">
+            COMING SOON
+        </div>
+
+    </footer>
+
+</div>
+
+</body>
+</html>
 
