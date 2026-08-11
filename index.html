@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>MIDWELT — Artists × Brands</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
   <meta
     name="description"
     content="MidWelt is a new territory between artists and brands."
@@ -15,11 +16,15 @@
   <meta property="og:url" content="https://www.midwelt.com/" />
   <meta property="og:type" content="website" />
 
-  <meta property="og:image" content="https://www.midwelt.com/preview_midwelt_text.png" />
+  <meta property="og:image" content="https://www.midwelt.com/midwelt-social-preview-v2.jpg" />
+  <meta property="og:image:secure_url" content="https://www.midwelt.com/midwelt-social-preview-v2.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="MIDWELT" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://www.midwelt.com/preview_midwelt_text.png" />
+  <meta name="twitter:image" content="https://www.midwelt.com/midwelt-social-preview-v2.jpg" />
+  <meta name="twitter:image:alt" content="MIDWELT" />
 
   <style>
     :root {
@@ -224,8 +229,14 @@
     }
 
     .world-line--nowrap {
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      white-space: normal;
       font-size: clamp(30px, 5.35vw, 86px);
+      text-align: center;
     }
 
     /* ARTISTS / BRANDS */
@@ -527,12 +538,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: clamp(84px, 13vh, 150px);
+      gap: 0;
       margin: 0 auto;
       text-align: center;
     }
 
-    .coming-soon-lead,
     .coming-soon-text {
       display: block;
       width: 100vw;
@@ -542,13 +552,68 @@
       align-self: center;
     }
 
-    .coming-soon-lead {
-      color: var(--green);
-    }
 
     .coming-soon-text {
       color: var(--pink);
     }
+
+    .coming-soon-signature {
+      margin-top: clamp(46px, 5.5vh, 62px);
+      color: var(--white);
+      font-family: inherit;
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1;
+      letter-spacing: var(--statement-spacing, -0.055em);
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0.94;
+    }
+
+    /* GEOGRAPHIC BACKGROUND — abstract territory / coordinates */
+    .geo-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .geo-layer {
+      position: absolute;
+      left: -16vw;
+      top: -10vh;
+      width: 132vw;
+      height: 120vh;
+      overflow: visible;
+      transform-origin: center center;
+      will-change: transform, opacity;
+      mix-blend-mode: screen;
+    }
+
+    .geo-topography { opacity: 0.43; }
+    .geo-orbits { opacity: 0.36; }
+    .geo-coordinates { opacity: 0.28; }
+
+    .geo-white,
+    .geo-green,
+    .geo-pink {
+      fill: none;
+      vector-effect: non-scaling-stroke;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .geo-white { stroke: rgba(244,244,241,0.58); stroke-width: 1.45; }
+    .geo-green { stroke: rgba(190,255,0,0.70); stroke-width: 1.55; }
+    .geo-pink { stroke: rgba(255,20,200,0.68); stroke-width: 1.55; }
+
+    .geo-faint { opacity: 0.42; }
+    .geo-dash { stroke-dasharray: 7 13; opacity: 0.70; }
+
+    .geo-dot-white { fill: rgba(244,244,241,0.82); }
+    .geo-dot-green { fill: rgba(190,255,0,0.88); }
+    .geo-dot-pink { fill: rgba(255,20,200,0.86); }
 
     @media (max-width: 760px) {
       :root { --pad: 18px; }
@@ -667,6 +732,211 @@
       color: var(--pink);
       text-align: center;
     }
+  
+    /* =========================================================
+       FINAL TYPOGRAPHY SYSTEM
+       One consistent headline scale across the entire experience.
+    ========================================================= */
+
+    :root {
+      --statement-size: clamp(42px, 6.4vw, 96px);
+      --statement-line: 0.98;
+      --statement-spacing: -0.055em;
+    }
+
+    .section {
+      overflow-x: clip;
+    }
+
+    .display,
+    .display--medium,
+    .display--small,
+    .world-line,
+    .world-word,
+    .between-message h2,
+    .what-copy,
+    .intermediary,
+    .difference-old,
+    .difference-new,
+    .difference-lockup,
+    .future-pair p,
+    .coming-soon-text {
+      font-size: var(--statement-size) !important;
+      line-height: var(--statement-line) !important;
+      letter-spacing: var(--statement-spacing) !important;
+      font-weight: 700;
+    }
+
+    .display,
+    .world-line,
+    .world-word,
+    .between-message h2,
+    .intermediary,
+    .difference-old,
+    .difference-new,
+    .future-pair p,
+    .coming-soon-text {
+      text-transform: uppercase;
+    }
+
+    .hero-title,
+    .world-lines,
+    .between-message,
+    .what .inner,
+    .difference-stage .inner,
+    .future .inner,
+    .coming-soon-inner {
+      text-align: center;
+    }
+
+    .what-copy,
+    .intermediary {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .difference-old,
+    .difference-new {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .future-pair {
+      width: min(100%, 1220px);
+    }
+
+    .future-pair p {
+      min-width: 0;
+      overflow-wrap: normal;
+    }
+
+    .coming-soon-text {
+      padding-block: 0.06em;
+    }
+
+    .fit-width-text {
+      display: inline-block;
+      flex: 0 0 auto;
+      width: max-content;
+      white-space: nowrap;
+      transform-origin: center center;
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --statement-size: clamp(32px, 9.4vw, 42px);
+        --statement-line: 1.02;
+        --statement-spacing: -0.045em;
+      }
+
+      .section {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: clip;
+      }
+
+      .inner {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .display,
+      .display--medium,
+      .display--small,
+      .world-line,
+      .world-word,
+      .between-message h2,
+      .what-copy,
+      .intermediary,
+      .difference-old,
+      .difference-new,
+      .difference-lockup,
+      .future-pair p,
+      .coming-soon-text {
+        font-size: var(--statement-size) !important;
+        max-width: 100%;
+      }
+
+      /* These two statements were intentionally requested on one line.
+         Keep the same font size, but condense only their horizontal width. */
+      .world-line--nowrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        white-space: normal;
+        font-size: var(--statement-size) !important;
+        letter-spacing: -0.055em !important;
+        text-align: center;
+        margin: 0 auto;
+        padding-left: 2px;
+        padding-right: 2px;
+      }
+
+      .difference-lockup {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        white-space: normal;
+        scale: 1;
+        transform: none;
+      }
+
+      .fit-width-text {
+        display: inline-block;
+        width: max-content;
+        white-space: nowrap;
+        transform-origin: center center;
+        will-change: transform;
+      }
+
+      .world-lockup {
+        max-width: 96vw;
+      }
+
+      .world-word {
+        white-space: nowrap;
+      }
+
+      .between-message {
+        width: 94vw;
+      }
+
+      .future-pair {
+        width: 100%;
+      }
+
+      .coming-soon-text {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .coming-soon-stack {
+        gap: 0;
+      }
+
+      .coming-soon-signature {
+        margin-top: 40px;
+        font-size: 12px;
+      }
+
+      .geo-layer {
+        left: -42vw;
+        top: -5vh;
+        width: 184vw;
+        height: 110vh;
+      }
+
+      .geo-topography { opacity: 0.38; }
+      .geo-orbits { opacity: 0.31; }
+      .geo-coordinates { opacity: 0.24; }
+    }
+
   </style>
 </head>
 
@@ -674,6 +944,46 @@
   <div class="ambient" aria-hidden="true">
     <div class="glow glow--pink" id="pinkGlow"></div>
     <div class="glow glow--green" id="greenGlow"></div>
+
+    <div class="geo-scene" aria-hidden="true">
+      <svg class="geo-layer geo-topography" id="geoTopography" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <g>
+          <path class="geo-white" d="M-110 120 C85 18 280 30 430 142 S735 286 920 176 S1280 34 1710 158"/>
+          <path class="geo-green" d="M-125 198 C88 88 285 105 444 220 S748 362 928 256 S1288 115 1715 235"/>
+          <path class="geo-pink" d="M-128 282 C98 168 300 184 462 303 S768 444 946 340 S1298 202 1718 320"/>
+          <path class="geo-white geo-faint" d="M-95 385 C125 270 315 292 475 408 S780 552 964 449 S1310 316 1710 425"/>
+          <path class="geo-green" d="M-120 512 C96 390 318 416 488 536 S804 675 984 570 S1324 438 1720 550"/>
+          <path class="geo-pink" d="M-105 602 C118 484 330 502 506 626 S816 762 1002 660 S1344 530 1720 636"/>
+          <path class="geo-white geo-faint" d="M-100 715 C130 594 344 618 526 742 S842 876 1025 774 S1365 650 1710 752"/>
+          <path class="geo-green" d="M-90 820 C138 706 350 724 540 844 S865 968 1045 875 S1380 748 1710 852"/>
+          <path class="geo-pink geo-faint" d="M-70 915 C155 804 365 822 554 936 S880 1055 1068 965 S1402 848 1700 944"/>
+        </g>
+      </svg>
+
+      <svg class="geo-layer geo-orbits" id="geoOrbits" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <g>
+          <ellipse class="geo-white" cx="835" cy="485" rx="620" ry="225" transform="rotate(-14 835 485)"/>
+          <ellipse class="geo-pink" cx="785" cy="545" rx="520" ry="170" transform="rotate(9 785 545)"/>
+          <ellipse class="geo-green" cx="815" cy="566" rx="405" ry="120" transform="rotate(-5 815 566)"/>
+          <path class="geo-white geo-dash" d="M120 820 C370 700 565 654 800 666 S1220 718 1492 854"/>
+          <circle class="geo-dot-white" cx="350" cy="248" r="3.8"/>
+          <circle class="geo-dot-green" cx="1178" cy="714" r="3.6"/>
+          <circle class="geo-dot-pink" cx="1326" cy="325" r="3.4"/>
+        </g>
+      </svg>
+
+      <svg class="geo-layer geo-coordinates" id="geoCoordinates" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <g>
+          <path class="geo-white geo-faint" d="M820 -80 C650 118 636 320 788 512 C938 702 934 905 770 1080"/>
+          <path class="geo-green geo-faint" d="M615 -100 C510 130 520 340 642 520 C760 698 748 894 626 1090"/>
+          <path class="geo-pink geo-faint" d="M1030 -100 C1135 126 1125 336 1005 520 C886 702 900 896 1028 1090"/>
+          <path class="geo-white geo-faint" d="M110 512 C310 405 545 364 805 372 C1060 380 1302 432 1510 545"/>
+          <path class="geo-green geo-faint" d="M170 680 C382 596 596 568 815 575 C1032 582 1238 615 1448 706"/>
+          <path class="geo-pink geo-faint geo-dash" d="M165 324 C386 248 604 222 816 230 C1032 238 1245 278 1455 364"/>
+        </g>
+      </svg>
+    </div>
+
     <div class="noise"></div>
   </div>
 
@@ -693,7 +1003,7 @@
       <div class="world-stage">
         <div class="inner world-lines">
           <p class="world-line">AI GENERATES IMAGES.</p>
-          <p class="world-line world-line--nowrap">ALGORITHMS OPTIMIZE ATTENTION.</p>
+          <p class="world-line world-line--nowrap"><span class="fit-width-text">ALGORITHMS OPTIMIZE ATTENTION.</span></p>
           <p class="world-line">CONTENT IS INFINITE.</p>
           <p class="world-line"><span class="pink">AUTHENTICITY</span> ISN'T.</p>
         </div>
@@ -751,7 +1061,7 @@
 
           <p class="difference-new" id="differenceNew">
             WE CREATE<br />
-            <span class="difference-lockup pink">COLLABORATIONS WITH THEM.</span>
+            <span class="difference-lockup pink"><span class="fit-width-text">COLLABORATIONS WITH THEM.</span></span>
           </p>
         </div>
       </div>
@@ -761,7 +1071,7 @@
       <div class="inner">
         <div class="future-pair reveal">
           <p class="pink">Artists become creative partners.</p>
-          <p class="pink">Businesses become cultural contributors.</p>
+          <p class="pink">Brands become cultural contributors.</p>
         </div>
 
 
@@ -771,8 +1081,8 @@
     <section class="section coming-soon">
       <div class="inner coming-soon-inner reveal">
         <div class="coming-soon-stack">
-          <div class="coming-soon-lead display display--small">A NEW TERRITORY</div>
-          <div class="coming-soon-text display display--small">COMING SOON</div>
+                    <div class="coming-soon-text display display--small">COMING SOON</div>
+          <div class="coming-soon-signature">MIDWELT 2026</div>
         </div>
       </div>
     </section>
@@ -783,6 +1093,34 @@
     (() => {
       const clamp = (value, min = 0, max = 1) =>
         Math.min(max, Math.max(min, value));
+
+      // Keep designated one-line statements at the same headline font size,
+      // then fit them horizontally only when their rendered width exceeds the safe area.
+      const fitSingleLine = (el) => {
+        if (!el) return;
+
+        const inner = el.querySelector(".fit-width-text") || el;
+        inner.style.transform = "scaleX(1)";
+
+        const rect = el.getBoundingClientRect();
+        const viewportSafeWidth = Math.max(1, window.innerWidth - 16);
+        const available = Math.max(
+          1,
+          Math.min(el.clientWidth - 8, viewportSafeWidth)
+        );
+        const naturalWidth = inner.scrollWidth;
+        const ratio = naturalWidth > available
+          ? Math.max(0.48, (available / naturalWidth) * 0.985)
+          : 1;
+
+        inner.style.transform = `scaleX(${ratio})`;
+      };
+
+      const fitSpecialLines = () => {
+        document
+          .querySelectorAll(".world-line--nowrap, .difference-lockup")
+          .forEach(fitSingleLine);
+      };
 
       const lerp = (a, b, t) => a + (b - a) * t;
       const easeInOut = (t) => t < 0.5
@@ -947,10 +1285,59 @@
       }
 
       window.addEventListener("scroll", requestUpdate, { passive: true });
-      window.addEventListener("resize", requestUpdate);
+      window.addEventListener("resize", () => {
+        requestUpdate();
+        fitSpecialLines();
+      });
+
+      window.addEventListener("load", () => {
+        fitSpecialLines();
+        requestAnimationFrame(fitSpecialLines);
+        setTimeout(fitSpecialLines, 120);
+      });
+      window.addEventListener("orientationchange", () => {
+        requestAnimationFrame(fitSpecialLines);
+      });
+
+      // Run immediately and again after layout has settled.
+      fitSpecialLines();
+      requestAnimationFrame(fitSpecialLines);
 
       update();
     })();
   </script>
+
+  <script>
+    (() => {
+      const topo = document.getElementById("geoTopography");
+      const orbits = document.getElementById("geoOrbits");
+      const coords = document.getElementById("geoCoordinates");
+      if (!topo || !orbits || !coords) return;
+
+      let ticking = false;
+
+      const updateGeo = () => {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const p = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+
+        topo.style.transform = `translate3d(${(-6.5 + p * 14.5).toFixed(2)}vw, ${(-8 + p * 19).toFixed(2)}vh, 0) rotate(${(-2.5 + p * 5).toFixed(2)}deg) scale(1.045)`;
+        orbits.style.transform = `translate3d(${(7.5 - p * 15.5).toFixed(2)}vw, ${(6.5 - p * 14.5).toFixed(2)}vh, 0) rotate(${(-10.5 + p * 21).toFixed(2)}deg) scale(1.035)`;
+        coords.style.transform = `translate3d(${(-3.5 + p * 7.5).toFixed(2)}vw, ${(4.5 - p * 9.5).toFixed(2)}vh, 0) rotate(${(-1.8 + p * 4.2).toFixed(2)}deg) scale(1.025)`;
+        ticking = false;
+      };
+
+      const requestGeoUpdate = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(updateGeo);
+        }
+      };
+
+      window.addEventListener("scroll", requestGeoUpdate, { passive: true });
+      window.addEventListener("resize", requestGeoUpdate);
+      updateGeo();
+    })();
+  </script>
+
 </body>
 </html>
