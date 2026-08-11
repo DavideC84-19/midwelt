@@ -937,6 +937,114 @@
       .geo-coordinates { opacity: 0.24; }
     }
 
+
+
+    /* =========================================================
+       V43 FINAL RESPONSIVE POLISH
+       Mobile fixes + desktop future-column alignment.
+    ========================================================= */
+    .mobile-hero-brand,
+    .mobile-break {
+      display: none;
+    }
+
+    /* Desktop: align both future statements to the left edge of
+       their own column, keep the existing type size, and give long
+       words (including CONTRIBUTORS) enough natural column width. */
+    @media (min-width: 761px) {
+      .future-pair {
+        width: min(calc(100vw - 56px), 1384px);
+        max-width: 1384px;
+        grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+        gap: clamp(24px, 2.5vw, 40px);
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+      }
+
+      .future-pair p {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        text-align: left !important;
+        white-space: normal;
+        overflow-wrap: normal;
+        word-break: normal;
+      }
+    }
+
+    @media (max-width: 760px) {
+      /* Opening screen: use the empty center as the brand lockup. */
+      .hero {
+        position: relative;
+      }
+
+      .mobile-hero-brand {
+        display: block;
+        position: absolute;
+        z-index: 3;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        color: var(--white);
+        font-family: inherit;
+        font-size: clamp(46px, 15.5vw, 74px);
+        line-height: 0.95;
+        letter-spacing: -0.065em;
+        font-weight: 700;
+        text-transform: uppercase;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      /* Keep ALGORITHMS... identical to the other statements: no
+         one-line fitting or horizontal scaling; only a mobile break. */
+      .world-line .fit-width-text,
+      .difference-lockup .fit-width-text {
+        width: auto;
+        white-space: normal;
+        transform: none !important;
+      }
+
+      /* Give the requested two-line algorithm statement the full
+         viewport width so OPTIMIZE ATTENTION. stays together at the
+         exact same font size as its neighboring statements. */
+      .world-lines .world-line:nth-child(2) {
+        width: calc(100vw - 10px);
+        max-width: calc(100vw - 10px);
+        margin-left: calc(50% - 50vw + 5px);
+        margin-right: calc(50% - 50vw + 5px);
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .mobile-break {
+        display: inline;
+      }
+
+      /* Collaboration line: same headline scale as WE CREATE, with
+         a clean two-line mobile wrap instead of condensed/stretched text. */
+      .difference-lockup {
+        display: inline-block;
+        width: 100%;
+        max-width: 100%;
+        font-size: var(--statement-size) !important;
+        line-height: var(--statement-line) !important;
+        letter-spacing: var(--statement-spacing) !important;
+        white-space: normal;
+        transform: none !important;
+        scale: 1 !important;
+        text-align: center;
+      }
+
+      /* Bring INTERMEDIARY and the next statement visually closer;
+         this reduces the cross-section empty gap by about 30%. */
+      .what {
+        min-height: 82svh !important;
+        padding-bottom: 24px;
+      }
+    }
   </style>
 </head>
 
@@ -991,6 +1099,7 @@
 
     <section class="section hero">
       <div class="inner">
+        <div class="mobile-hero-brand" aria-hidden="true">MIDWELT</div>
         <h1 class="display hero-title reveal">
           A NEW <span class="green">TERRITORY</span><br />
           BETWEEN ARTISTS<br />
@@ -1003,7 +1112,7 @@
       <div class="world-stage">
         <div class="inner world-lines">
           <p class="world-line">AI GENERATES IMAGES.</p>
-          <p class="world-line world-line--nowrap"><span class="fit-width-text">ALGORITHMS OPTIMIZE ATTENTION.</span></p>
+          <p class="world-line">ALGORITHMS<span class="mobile-break"><br /></span> OPTIMIZE ATTENTION.</p>
           <p class="world-line">CONTENT IS INFINITE.</p>
           <p class="world-line"><span class="pink">AUTHENTICITY</span> ISN'T.</p>
         </div>
@@ -1061,7 +1170,7 @@
 
           <p class="difference-new" id="differenceNew">
             WE CREATE<br />
-            <span class="difference-lockup pink"><span class="fit-width-text">COLLABORATIONS WITH THEM.</span></span>
+            <span class="difference-lockup pink">COLLABORATIONS<span class="mobile-break"><br /></span> WITH THEM.</span>
           </p>
         </div>
       </div>
@@ -1118,7 +1227,7 @@
 
       const fitSpecialLines = () => {
         document
-          .querySelectorAll(".world-line--nowrap, .difference-lockup")
+          .querySelectorAll(".world-line--nowrap")
           .forEach(fitSingleLine);
       };
 
