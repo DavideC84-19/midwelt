@@ -1164,6 +1164,12 @@
       top: 35.5%;
     }
 
+    @media (min-width: 761px) {
+      .mobile-hero-brand {
+        font-size: clamp(66px, 7.2vw, 108px);
+      }
+    }
+
     .coming-soon-closing {
       color: var(--white);
       margin-bottom: 1.05em; /* approximately one blank headline line */
@@ -1196,6 +1202,27 @@
     }
 
   
+    /* MOBILE FINAL RHYTHM — requested spacing / shorter sticky travel */
+    @media (max-width: 760px) {
+      /* 30% less sticky travel in the AI/text chapter before ARTISTS | BRANDS.
+         Previous travel: 42svh (142 - 100); new travel: ~29.4svh. */
+      .world {
+        min-height: 129.4svh;
+      }
+
+      /* 40% less sticky travel after WE CREATE before WE IDENTIFY.
+         Previous travel: 15.4svh (115.4 - 100); new travel: ~9.24svh. */
+      .difference {
+        min-height: 109.24svh;
+      }
+
+      /* More breathing room between the two future statements. */
+      .future-pair {
+        gap: 42px;
+      }
+
+    }
+
     /* FINAL READY PASS — closing palette + mobile scroll performance */
     .future-pair p.pink,
     .future-pair p.green {
@@ -1224,6 +1251,22 @@
       .geo-layer,
       .glow {
         will-change: auto;
+      }
+
+      /* Mobile text motion: translate + opacity only. Avoid scale() on large
+         glyphs because mobile browsers can re-rasterize them and shimmer. */
+      .world-line,
+      .world-word,
+      .between-message,
+      .difference-old,
+      .difference-new,
+      .process-step {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      .process-step {
+        transform: translate3d(0, 34px, 0);
       }
     }
 </style>
@@ -1434,9 +1477,17 @@
         ? 4 * t * t * t
         : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
+      let stableViewportHeight = window.innerHeight;
+      let stableViewportWidth = window.innerWidth;
+
       const progressInSection = (section) => {
         const rect = section.getBoundingClientRect();
-        const travel = rect.height - window.innerHeight;
+        // Mobile browser chrome changes window.innerHeight while scrolling.
+        // Keep a stable height so text progress cannot jump/bounce as bars collapse.
+        const viewportHeight = window.innerWidth <= 760
+          ? stableViewportHeight
+          : window.innerHeight;
+        const travel = rect.height - viewportHeight;
         if (travel <= 0) return 0;
         return clamp(-rect.top / travel);
       };
@@ -1534,8 +1585,10 @@
           const distance = Math.abs(worldPosition - index);
           const emphasis = easeInOut(1 - clamp(distance / 0.95));
           line.style.opacity = String(lerp(0.16, 1, emphasis));
-          line.style.transform =
-            `translate3d(0, ${lerp(7, 0, emphasis)}px, 0) scale(${lerp(0.995, 1.015, emphasis)})`;
+          const worldY = lerp(7, 0, emphasis);
+          line.style.transform = mobile
+            ? `translate3d(0, ${worldY}px, 0)`
+            : `translate3d(0, ${worldY}px, 0) scale(${lerp(0.995, 1.015, emphasis)})`;
         });
 
         const betweenTarget = progressInSection(betweenSection);
@@ -1543,7 +1596,11 @@
         // Add a small amount of inertia: the scene still follows the scroll,
         // but it glides toward the target instead of feeling attached to each wheel/touch step.
         if (betweenVisualProgress === null) betweenVisualProgress = betweenTarget;
-        betweenVisualProgress = lerp(betweenVisualProgress, betweenTarget, 0.18);
+        // Touch scrolling already has native momentum. Extra JS inertia can look like
+        // a second tiny bounce after the finger stops, so keep inertia desktop-only.
+        betweenVisualProgress = mobile
+          ? betweenTarget
+          : lerp(betweenVisualProgress, betweenTarget, 0.18);
 
         const meet = clamp((betweenVisualProgress - 0.035) / 0.34);
         const revealMessage = clamp((betweenVisualProgress - 0.39) / 0.22);
@@ -1557,11 +1614,13 @@
         const artistsX = lerp(-startSpread, endApproach, smoothMeet);
         const brandsX = lerp(startSpread, -endApproach, smoothMeet);
 
-        artistsWord.style.transform =
-          `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
+        artistsWord.style.transform = mobile
+          ? `translate3d(${artistsX}vw, 0, 0)`
+          : `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
-        brandsWord.style.transform =
-          `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
+        brandsWord.style.transform = mobile
+          ? `translate3d(${brandsX}vw, 0, 0)`
+          : `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
         const wordOpacity = lerp(1, 0.18, smoothReveal);
         artistsWord.style.opacity = String(wordOpacity);
@@ -1580,7 +1639,7 @@
         betweenMessage.style.transform =
           `translateX(-50%) translateY(${lerp(20, 0, smoothReveal)}px)`;
 
-        if (Math.abs(betweenTarget - betweenVisualProgress) > 0.0008) {
+        if (!mobile && Math.abs(betweenTarget - betweenVisualProgress) > 0.0008) {
           requestUpdate();
         }
 
@@ -1626,8 +1685,9 @@
             const scale = lerp(0.985, 1.01, visibility);
 
             step.style.opacity = String(visibility);
-            step.style.transform =
-              `translate3d(0, ${y}px, 0) scale(${scale})`;
+            step.style.transform = mobile
+              ? `translate3d(0, ${y}px, 0)`
+              : `translate3d(0, ${y}px, 0) scale(${scale})`;
           });
         }
       }
@@ -1641,6 +1701,16 @@
 
       window.addEventListener("scroll", requestUpdate, { passive: true });
       window.addEventListener("resize", () => {
+        const currentWidth = window.innerWidth;
+        const widthChanged = Math.abs(currentWidth - stableViewportWidth) > 2;
+        const mobileNow = currentWidth <= 760;
+
+        // iOS/Android browser bars can fire resize events from height changes only.
+        // Ignore those for text layout/progress so animations do not jump.
+        if (mobileNow && !widthChanged) return;
+
+        stableViewportWidth = currentWidth;
+        stableViewportHeight = window.innerHeight;
         requestUpdate();
         fitSpecialLines();
       });
@@ -1651,7 +1721,12 @@
         setTimeout(fitSpecialLines, 120);
       });
       window.addEventListener("orientationchange", () => {
-        requestAnimationFrame(fitSpecialLines);
+        setTimeout(() => {
+          stableViewportWidth = window.innerWidth;
+          stableViewportHeight = window.innerHeight;
+          fitSpecialLines();
+          requestUpdate();
+        }, 160);
       });
 
       // Run immediately and again after layout has settled.
