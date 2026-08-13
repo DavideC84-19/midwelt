@@ -1062,10 +1062,10 @@
     /* Desktop: keep both future statements parallel and visually balanced. */
     @media (min-width: 761px) {
       .future-pair {
-        width: min(calc(100vw - 72px), 1384px);
-        max-width: 1384px;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: clamp(36px, 4vw, 72px);
+        width: min(calc(100vw - 72px), 1440px);
+        max-width: 1440px;
+        grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+        gap: clamp(24px, 2vw, 40px);
         margin-left: auto;
         margin-right: auto;
         text-align: center;
@@ -1075,7 +1075,7 @@
       .future-pair p {
         width: 100%;
         min-width: 0;
-        max-width: 650px;
+        max-width: none;
         text-align: center !important;
         white-space: normal;
         overflow-wrap: normal;
@@ -1538,42 +1538,62 @@
         const global = clamp(window.scrollY / maxScroll);
         const mobile = window.innerWidth <= 760;
 
-        if (!mobile) {
+        {
           const meeting =
             1 - Math.min(1, Math.abs(global - 0.42) / 0.20);
 
           // Pull both glows lower near the end so COMING SOON stays cleaner.
           const endDrop = clamp((global - 0.82) / 0.18);
 
-          // Decorative ambient motion stays desktop-only for a lighter mobile scroll path.
-          const pinkX =
-            -8 - global * 28 - meeting * 23 +
-            Math.sin(global * Math.PI * 5.2) * 10;
+          if (mobile) {
+            // Mobile ambient motion: same visual idea as desktop, but with smaller
+            // travel/scale ranges so the large blurred layers stay smooth on touch scroll.
+            const driftA = Math.sin(global * Math.PI * 4.2);
+            const driftB = Math.cos(global * Math.PI * 3.6);
+            const pulse = 0.035 * Math.sin(global * Math.PI * 5.0);
 
-          const pinkY =
-            5 + global * 34 + meeting * 14 +
-            Math.cos(global * Math.PI * 4.0) * 8 +
-            endDrop * 18;
+            const pinkX = -3 - global * 15 - meeting * 10 + driftA * 4.5;
+            const pinkY = 3 + global * 18 + meeting * 8 + driftB * 3.5 + endDrop * 8;
+            const greenX = 4 + global * 14 + meeting * 11 - driftB * 4.2;
+            const greenY = -3 - global * 15 - meeting * 7 - driftA * 3.2 + endDrop * 10;
 
-          const greenX =
-            7 + global * 25 + meeting * 24 -
-            Math.cos(global * Math.PI * 4.8) * 10;
+            pinkGlow.style.transform =
+              `translate3d(${pinkX.toFixed(2)}vw, ${pinkY.toFixed(2)}vh, 0) scale(${(1.02 + meeting * 0.16 + pulse).toFixed(3)})`;
+            greenGlow.style.transform =
+              `translate3d(${greenX.toFixed(2)}vw, ${greenY.toFixed(2)}vh, 0) scale(${(1.04 + meeting * 0.17 - pulse).toFixed(3)})`;
 
-          const greenY =
-            -4 - global * 27 - meeting * 12 -
-            Math.sin(global * Math.PI * 3.8) * 8 +
-            endDrop * 22;
+            pinkGlow.style.opacity = String(0.76 + meeting * 0.13 - endDrop * 0.08);
+            greenGlow.style.opacity = String(0.74 + meeting * 0.13 - endDrop * 0.09);
+          } else {
+            const pinkX =
+              -8 - global * 28 - meeting * 23 +
+              Math.sin(global * Math.PI * 5.2) * 10;
 
-          const pulse = 0.06 * Math.sin(global * Math.PI * 6);
+            const pinkY =
+              5 + global * 34 + meeting * 14 +
+              Math.cos(global * Math.PI * 4.0) * 8 +
+              endDrop * 18;
 
-          pinkGlow.style.transform =
-            `translate3d(${pinkX}vw, ${pinkY}vh, 0) scale(${1.02 + meeting * 0.28 + pulse})`;
+            const greenX =
+              7 + global * 25 + meeting * 24 -
+              Math.cos(global * Math.PI * 4.8) * 10;
 
-          greenGlow.style.transform =
-            `translate3d(${greenX}vw, ${greenY}vh, 0) scale(${1.04 + meeting * 0.30 - pulse})`;
+            const greenY =
+              -4 - global * 27 - meeting * 12 -
+              Math.sin(global * Math.PI * 3.8) * 8 +
+              endDrop * 22;
 
-          pinkGlow.style.opacity = String(0.78 + meeting * 0.16 - endDrop * 0.10);
-          greenGlow.style.opacity = String(0.76 + meeting * 0.16 - endDrop * 0.12);
+            const pulse = 0.06 * Math.sin(global * Math.PI * 6);
+
+            pinkGlow.style.transform =
+              `translate3d(${pinkX}vw, ${pinkY}vh, 0) scale(${1.02 + meeting * 0.28 + pulse})`;
+
+            greenGlow.style.transform =
+              `translate3d(${greenX}vw, ${greenY}vh, 0) scale(${1.04 + meeting * 0.30 - pulse})`;
+
+            pinkGlow.style.opacity = String(0.78 + meeting * 0.16 - endDrop * 0.10);
+            greenGlow.style.opacity = String(0.76 + meeting * 0.16 - endDrop * 0.12);
+          }
         }
 
         const worldProgress = progressInSection(worldSection);
@@ -1747,27 +1767,29 @@
       let ticking = false;
 
       const updateGeo = () => {
-        if (window.innerWidth <= 760) {
-          // Keep the decorative geography visually present on mobile, but static.
-          // This avoids repainting three large blended SVG layers on every touch-scroll frame.
-          topo.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1.045)';
-          orbits.style.transform = 'translate3d(0, 0, 0) rotate(-2deg) scale(1.035)';
-          coords.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1.025)';
-          ticking = false;
-          return;
-        }
-
         const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
         const p = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+        const mobile = window.innerWidth <= 760;
 
-        topo.style.transform = `translate3d(${(-6.5 + p * 14.5).toFixed(2)}vw, ${(-8 + p * 19).toFixed(2)}vh, 0) rotate(${(-2.5 + p * 5).toFixed(2)}deg) scale(1.045)`;
-        orbits.style.transform = `translate3d(${(7.5 - p * 15.5).toFixed(2)}vw, ${(6.5 - p * 14.5).toFixed(2)}vh, 0) rotate(${(-10.5 + p * 21).toFixed(2)}deg) scale(1.035)`;
-        coords.style.transform = `translate3d(${(-3.5 + p * 7.5).toFixed(2)}vw, ${(4.5 - p * 9.5).toFixed(2)}vh, 0) rotate(${(-1.8 + p * 4.2).toFixed(2)}deg) scale(1.025)`;
+        if (mobile) {
+          // Three lightweight parallax layers. Different phase/direction makes the
+          // background feel alive without touching page layout or text animation.
+          const waveA = Math.sin(p * Math.PI * 4.0);
+          const waveB = Math.cos(p * Math.PI * 3.2);
+          const waveC = Math.sin(p * Math.PI * 2.6 + 0.8);
+
+          topo.style.transform = `translate3d(${(-2.6 + p * 6.2 + waveA * 1.35).toFixed(2)}vw, ${(-2.2 + p * 5.4 + waveB * 0.9).toFixed(2)}vh, 0) rotate(${(-1.2 + p * 2.6 + waveC * 0.45).toFixed(2)}deg) scale(${(1.035 + waveB * 0.008).toFixed(3)})`;
+          orbits.style.transform = `translate3d(${(3.4 - p * 7.1 + waveB * 1.15).toFixed(2)}vw, ${(2.8 - p * 5.7 + waveC * 0.85).toFixed(2)}vh, 0) rotate(${(-4.2 + p * 7.8 + waveA * 0.65).toFixed(2)}deg) scale(${(1.030 - waveC * 0.007).toFixed(3)})`;
+          coords.style.transform = `translate3d(${(-1.8 + p * 4.2 + waveC * 0.75).toFixed(2)}vw, ${(1.8 - p * 3.8 + waveA * 0.65).toFixed(2)}vh, 0) rotate(${(-0.9 + p * 2.1 + waveB * 0.35).toFixed(2)}deg) scale(${(1.020 + waveA * 0.005).toFixed(3)})`;
+        } else {
+          topo.style.transform = `translate3d(${(-6.5 + p * 14.5).toFixed(2)}vw, ${(-8 + p * 19).toFixed(2)}vh, 0) rotate(${(-2.5 + p * 5).toFixed(2)}deg) scale(1.045)`;
+          orbits.style.transform = `translate3d(${(7.5 - p * 15.5).toFixed(2)}vw, ${(6.5 - p * 14.5).toFixed(2)}vh, 0) rotate(${(-10.5 + p * 21).toFixed(2)}deg) scale(1.035)`;
+          coords.style.transform = `translate3d(${(-3.5 + p * 7.5).toFixed(2)}vw, ${(4.5 - p * 9.5).toFixed(2)}vh, 0) rotate(${(-1.8 + p * 4.2).toFixed(2)}deg) scale(1.025)`;
+        }
         ticking = false;
       };
 
       const requestGeoUpdate = () => {
-        if (window.innerWidth <= 760) return;
         if (!ticking) {
           ticking = true;
           requestAnimationFrame(updateGeo);
