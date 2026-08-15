@@ -534,6 +534,26 @@
     .future-pair p.pink { color: var(--pink); }
     .future-pair p.green { color: var(--green); }
 
+    /* MIDWELT future statements — same typography, patterned letter fill only.
+       Exact site colors: white #f4f4f1, acid green #beff00, acid pink #ff14c8.
+       Hard-edged, defined camouflage/giraffe-style shapes; no transparency or tinting. */
+    .future-pair p {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' fill='%23f4f4f1'/%3E%3Cpath fill='%23ff14c8' d='M4 8 15 4 25 9 23 19 14 24 6 19ZM52 6 65 4 72 12 68 23 58 25 49 18ZM28 39 39 34 49 39 47 49 38 54 29 50ZM59 48 73 44 80 51 77 62 66 67 56 61ZM8 61 18 57 26 63 24 73 14 78 6 72Z'/%3E%3Cpath fill='%23beff00' d='M31 5 41 2 49 8 47 17 38 21 30 16ZM5 31 17 27 25 34 22 44 12 48 4 42ZM52 29 64 27 73 35 70 45 60 49 50 42ZM34 61 45 57 53 64 51 75 41 80 31 73ZM70 2 80 7 82 17 76 24 68 20 65 11Z'/%3E%3Cpath fill='%23ff14c8' d='M77 29 82 31 83 37 79 41 74 39 73 34ZM18 48 23 47 27 51 25 56 20 57 16 53Z'/%3E%3Cpath fill='%23beff00' d='M2 51 7 49 11 53 10 58 5 60 1 56ZM54 72 60 70 64 74 62 81 56 83 52 78Z'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 68px 68px;
+      background-position: center;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 760px) {
+      .future-pair p {
+        background-size: 54px 54px;
+      }
+    }
+
 
     /* CONTACT */
     .contact {
@@ -1210,11 +1230,6 @@
         min-height: 129.4svh;
       }
 
-      /* 40% less sticky travel after WE CREATE before WE IDENTIFY.
-         Previous travel: 15.4svh (115.4 - 100); new travel: ~9.24svh. */
-      .difference {
-        min-height: 109.24svh;
-      }
 
       /* More breathing room between the two future statements. */
       .future-pair {
@@ -1247,28 +1262,6 @@
       transition: none;
     }
 
-    @media (max-width: 760px) {
-      .geo-layer,
-      .glow {
-        will-change: auto;
-      }
-
-      /* Mobile text motion: translate + opacity only. Avoid scale() on large
-         glyphs because mobile browsers can re-rasterize them and shimmer. */
-      .world-line,
-      .world-word,
-      .between-message,
-      .difference-old,
-      .difference-new,
-      .process-step {
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-      }
-
-      .process-step {
-        transform: translate3d(0, 34px, 0);
-      }
-    }
 
 
     /* =========================================================
@@ -1300,14 +1293,10 @@
     }
 
     @media (max-width: 760px) {
-      .difference {
-        min-height: 100svh;
-      }
-
-      /* Make the hand-off from WE CREATE -> WE IDENTIFY -> WE SHAPE
-         visibly faster on mobile, without changing the later section content. */
+      /* Give IDENTIFY / SHAPE / BRING enough pinned travel to breathe on mobile.
+         The sequence remains compact, but each phrase gets a clearer hold and slower fade. */
       .process {
-        min-height: 136svh;
+        min-height: 150svh;
       }
 
       .coming-soon-text {
@@ -1370,7 +1359,7 @@
       left: 50%;
       transform: translateX(-50%);
       margin: 0;
-      font-size: clamp(15px, 1.2vw, 20px);
+      font-size: clamp(16px, 1.3vw, 22px);
       line-height: 1;
       font-weight: 700;
       letter-spacing: .16em;
@@ -1547,7 +1536,7 @@
 
       .audience-label {
         top: 30px;
-        font-size: 12px;
+        font-size: 14px;
         letter-spacing: .15em;
       }
 
@@ -1608,52 +1597,232 @@
         line-height: 1;
       }
 
-      /* Keep these two sensitive scroll chapters on the main text raster layer.
-         No transforms on the final WORLD line or the BETWEEN message means mobile
-         Chrome/Safari cannot re-rasterize them mid-scroll and create shimmer/jump. */
-      .world-lines .world-line:nth-child(3) {
-        transform: none !important;
-        will-change: opacity;
-        backface-visibility: visible;
-        -webkit-backface-visibility: visible;
-      }
-
-      .between-message {
-        transform: translate3d(-50%, 0, 0) !important;
-        will-change: opacity;
-        backface-visibility: visible;
-        -webkit-backface-visibility: visible;
-      }
     }
 
 
-    /* FINAL MOBILE QA — align sticky geometry with scroll math.
-       The generic mobile .section padding was still being applied to sticky chapters,
-       so the sticky stage released before the JS progress reached the end. That is the
-       real source of the remaining CONTENT / BETWEEN jump and also added hidden scroll. */
+    /* =========================================================
+       MOBILE STABILITY PASS — single source of truth for scroll text
+       ========================================================= */
+    .ambient,
+    .geo-scene {
+      contain: paint;
+    }
+
     @media (max-width: 760px) {
+      body {
+        text-rendering: auto;
+      }
+
+      /* Sticky chapters use the exact stage height in JS. Keep stage geometry
+         explicit and free from generic section padding. */
       .world,
       .between,
       .difference,
-      .process {
-        padding-top: 0;
-        padding-bottom: 0;
+      .process,
+      .audience-chapter {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
       }
 
-      /* Keep a short but real animation range for WE CREATE after removing the
-         accidental padding-based travel. */
+      /* A slightly longer active WE CREATE range makes the text animate across
+         enough touch-scroll frames. The following PROCESS now begins while entering,
+         so this adds motion rather than empty scroll. */
       .difference {
-        min-height: 109.24svh;
+        min-height: 118svh !important;
       }
 
-      /* Centre the BETWEEN message without any transform/compositor layer. */
-      .between-message {
-        left: 3vw;
-        right: 3vw;
-        width: auto;
+      /* Pull the explanatory chapter into the BETWEEN exit so the hand-off is
+         continuous instead of leaving a half-screen of empty scroll. */
+      .what {
+        margin-top: -28svh;
+      }
+
+      /* WORLD: opacity carries the emphasis on phones. Removing glyph transforms
+         eliminates mobile text re-rasterization while keeping the visual dissolve. */
+      .world-line {
         transform: none !important;
+        will-change: opacity !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+      }
+
+      /* Move ARTISTS / BRANDS through their containers, not the glyph nodes.
+         The words are rasterized once while the lightweight parent layers glide. */
+      .side--artists,
+      .side--brands {
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      .world-word {
+        transform: none !important;
+        will-change: opacity;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+      }
+
+      /* BETWEEN message never moves on mobile; it only fades in. */
+      .between-message {
+        left: 3vw !important;
+        right: 3vw !important;
+        width: auto !important;
+        transform: none !important;
+        will-change: opacity !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+      }
+
+      /* Keep the remaining text transitions lightweight: no 3D glyph layers. */
+      .difference-old,
+      .difference-new,
+      .process-step,
+      .audience-core,
+      .audience-node,
+      .audience-close {
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+      }
+
+      /* Decorative layers are isolated on their own compositor surfaces so their
+         repaint cost cannot invalidate the typography during touch scrolling. */
+      .geo-layer,
+      .glow {
+        will-change: transform, opacity;
       }
     }
+
+
+
+    /* =========================================================
+       MOBILE MOTION STABILITY V2 — authoritative final overrides
+       ========================================================= */
+    .difference-stage {
+      height: 100svh !important;
+      min-height: 100svh !important;
+      flex: 0 0 100svh !important;
+    }
+
+    @media (max-width: 760px) {
+      html {
+        scroll-behavior: auto;
+        overscroll-behavior-y: none;
+      }
+
+      /* Remove the only structural sticky mismatch left in the page.
+         The stage must be exactly one small viewport, never stretched by flexbox. */
+      .difference-stage {
+        height: 100svh !important;
+        min-height: 100svh !important;
+        flex: 0 0 100svh !important;
+      }
+
+      /* Replace the old negative-margin overlap with a shorter BETWEEN chapter.
+         Same visual hand-off, but no two sections physically occupying the same scroll range. */
+      .between {
+        min-height: 145svh !important;
+      }
+
+      .what {
+        margin-top: 0 !important;
+      }
+
+      /* Mobile text never translates while fading. This prevents Safari from repeatedly
+         re-rasterizing large glyphs and removes the apparent freeze/bounce. */
+      .reveal {
+        transform: none !important;
+        transition: opacity 650ms cubic-bezier(.16, 1, .3, 1) !important;
+      }
+
+      .difference-old,
+      .difference-new,
+      .process-step {
+        transform: none !important;
+      }
+
+      .world-line,
+      .world-word,
+      .between-message,
+      .difference-old,
+      .difference-new,
+      .process-step,
+      .audience-core,
+      .audience-node,
+      .audience-close {
+        will-change: auto !important;
+      }
+
+      /* The noise blend is visually almost imperceptible at 3.5%, but expensive on
+         mobile compositors because it sits over every moving layer. */
+      .noise {
+        display: none !important;
+      }
+
+      .audience-stage::before {
+        filter: none !important;
+      }
+    }
+
+
+    /* =========================================================
+       AUG 15 — FINAL MOTION / PATTERN AUTHORITATIVE OVERRIDES
+       ========================================================= */
+    .future-pair p.pattern-letter-fill {
+      background: none !important;
+      color: var(--white) !important;
+      -webkit-text-fill-color: var(--white) !important;
+    }
+    .pattern-word {
+      display: inline-block;
+      white-space: nowrap;
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+    }
+    .pattern-letter {
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' fill='%23f4f4f1'/%3E%3Cpath fill='%23ff14c8' d='M4 8 15 4 25 9 23 19 14 24 6 19ZM52 6 65 4 72 12 68 23 58 25 49 18ZM28 39 39 34 49 39 47 49 38 54 29 50ZM59 48 73 44 80 51 77 62 66 67 56 61ZM8 61 18 57 26 63 24 73 14 78 6 72Z'/%3E%3Cpath fill='%23beff00' d='M31 5 41 2 49 8 47 17 38 21 30 16ZM5 31 17 27 25 34 22 44 12 48 4 42ZM52 29 64 27 73 35 70 45 60 49 50 42ZM34 61 45 57 53 64 51 75 41 80 31 73ZM70 2 80 7 82 17 76 24 68 20 65 11Z'/%3E%3Cpath fill='%23ff14c8' d='M77 29 82 31 83 37 79 41 74 39 73 34ZM18 48 23 47 27 51 25 56 20 57 16 53Z'/%3E%3Cpath fill='%23beff00' d='M2 51 7 49 11 53 10 58 5 60 1 56ZM54 72 60 70 64 74 62 81 56 83 52 78Z'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 64px 64px;
+      -webkit-background-clip: text;
+      background-clip: text;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    .pattern-shift-0 { background-position: 0px 0px; }
+    .pattern-shift-1 { background-position: -13px -9px; }
+    .pattern-shift-2 { background-position: -27px -17px; }
+    .pattern-shift-3 { background-position: -8px -31px; }
+    .pattern-shift-4 { background-position: -35px -5px; }
+    .pattern-shift-5 { background-position: -21px -38px; }
+
+    .process { min-height: 195svh !important; }
+    .audience-chapter { min-height: 290svh !important; }
+
+    @media (max-width: 760px) {
+      .process { min-height: 205svh !important; }
+      .audience-chapter { min-height: 315svh !important; }
+      .pattern-letter { background-size: 52px 52px; }
+      .process-step {
+        --process-y: 0px;
+        transform: translate3d(0, var(--process-y), 0) !important;
+        will-change: transform, opacity !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+      }
+      .geo-layer {
+        will-change: transform !important;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+    }
+
 </style>
 </head>
 
@@ -1900,8 +2069,8 @@
     <section class="section future">
       <div class="inner">
         <div class="future-pair reveal">
-          <p class="white">Artists become creative partners.</p>
-          <p class="white">Brands become cultural contributors.</p>
+          <p class="white pattern-letter-fill" aria-label="Artists become creative partners."><span class="pattern-word"><span class="pattern-letter pattern-shift-0">A</span><span class="pattern-letter pattern-shift-1">r</span><span class="pattern-letter pattern-shift-2">t</span><span class="pattern-letter pattern-shift-3">i</span><span class="pattern-letter pattern-shift-4">s</span><span class="pattern-letter pattern-shift-5">t</span><span class="pattern-letter pattern-shift-0">s</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-1">b</span><span class="pattern-letter pattern-shift-2">e</span><span class="pattern-letter pattern-shift-3">c</span><span class="pattern-letter pattern-shift-4">o</span><span class="pattern-letter pattern-shift-5">m</span><span class="pattern-letter pattern-shift-0">e</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-1">c</span><span class="pattern-letter pattern-shift-2">r</span><span class="pattern-letter pattern-shift-3">e</span><span class="pattern-letter pattern-shift-4">a</span><span class="pattern-letter pattern-shift-5">t</span><span class="pattern-letter pattern-shift-0">i</span><span class="pattern-letter pattern-shift-1">v</span><span class="pattern-letter pattern-shift-2">e</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-3">p</span><span class="pattern-letter pattern-shift-4">a</span><span class="pattern-letter pattern-shift-5">r</span><span class="pattern-letter pattern-shift-0">t</span><span class="pattern-letter pattern-shift-1">n</span><span class="pattern-letter pattern-shift-2">e</span><span class="pattern-letter pattern-shift-3">r</span><span class="pattern-letter pattern-shift-4">s</span><span class="pattern-letter pattern-shift-5">.</span></span></p>
+          <p class="white pattern-letter-fill" aria-label="Brands become cultural contributors."><span class="pattern-word"><span class="pattern-letter pattern-shift-3">B</span><span class="pattern-letter pattern-shift-4">r</span><span class="pattern-letter pattern-shift-5">a</span><span class="pattern-letter pattern-shift-0">n</span><span class="pattern-letter pattern-shift-1">d</span><span class="pattern-letter pattern-shift-2">s</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-3">b</span><span class="pattern-letter pattern-shift-4">e</span><span class="pattern-letter pattern-shift-5">c</span><span class="pattern-letter pattern-shift-0">o</span><span class="pattern-letter pattern-shift-1">m</span><span class="pattern-letter pattern-shift-2">e</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-3">c</span><span class="pattern-letter pattern-shift-4">u</span><span class="pattern-letter pattern-shift-5">l</span><span class="pattern-letter pattern-shift-0">t</span><span class="pattern-letter pattern-shift-1">u</span><span class="pattern-letter pattern-shift-2">r</span><span class="pattern-letter pattern-shift-3">a</span><span class="pattern-letter pattern-shift-4">l</span></span> <span class="pattern-word"><span class="pattern-letter pattern-shift-5">c</span><span class="pattern-letter pattern-shift-0">o</span><span class="pattern-letter pattern-shift-1">n</span><span class="pattern-letter pattern-shift-2">t</span><span class="pattern-letter pattern-shift-3">r</span><span class="pattern-letter pattern-shift-4">i</span><span class="pattern-letter pattern-shift-5">b</span><span class="pattern-letter pattern-shift-0">u</span><span class="pattern-letter pattern-shift-1">t</span><span class="pattern-letter pattern-shift-2">o</span><span class="pattern-letter pattern-shift-3">r</span><span class="pattern-letter pattern-shift-4">s</span><span class="pattern-letter pattern-shift-5">.</span></span></p>
         </div>
 
 
@@ -1922,355 +2091,275 @@
 
   <script>
     (() => {
-      const clamp = (value, min = 0, max = 1) =>
-        Math.min(max, Math.max(min, value));
-
-      // Keep designated one-line statements at the same headline font size,
-      // then fit them horizontally only when their rendered width exceeds the safe area.
-      const fitSingleLine = (el) => {
-        if (!el) return;
-
-        const inner = el.querySelector(".fit-width-text") || el;
-        inner.style.transform = "scaleX(1)";
-
-        const rect = el.getBoundingClientRect();
-        const viewportSafeWidth = Math.max(1, window.innerWidth - 16);
-        const available = Math.max(
-          1,
-          Math.min(el.clientWidth - 8, viewportSafeWidth)
-        );
-        const naturalWidth = inner.scrollWidth;
-        const ratio = naturalWidth > available
-          ? Math.max(0.48, (available / naturalWidth) * 0.985)
-          : 1;
-
-        inner.style.transform = `scaleX(${ratio})`;
-      };
-
-      const fitSpecialLines = () => {
-        document
-          .querySelectorAll(".world-line--nowrap")
-          .forEach(fitSingleLine);
-      };
-
+      const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
       const lerp = (a, b, t) => a + (b - a) * t;
       const easeInOut = (t) => t < 0.5
         ? 4 * t * t * t
         : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-      let stableViewportHeight = window.innerHeight;
+      const fitSingleLine = (el) => {
+        if (!el) return;
+        const inner = el.querySelector('.fit-width-text') || el;
+        inner.style.transform = 'scaleX(1)';
+        const viewportSafeWidth = Math.max(1, window.innerWidth - 16);
+        const available = Math.max(1, Math.min(el.clientWidth - 8, viewportSafeWidth));
+        const naturalWidth = inner.scrollWidth;
+        const ratio = naturalWidth > available
+          ? Math.max(0.48, (available / naturalWidth) * 0.985)
+          : 1;
+        inner.style.transform = `scaleX(${ratio})`;
+      };
+
+      const fitSpecialLines = () => {
+        document.querySelectorAll('.world-line--nowrap').forEach(fitSingleLine);
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14 });
+      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+      const pinkGlow = document.getElementById('pinkGlow');
+      const greenGlow = document.getElementById('greenGlow');
+
+      const worldSection = document.getElementById('worldSection');
+      const worldStage = worldSection && worldSection.querySelector('.world-stage');
+      const worldLines = [...document.querySelectorAll('.world-line')];
+
+      const betweenSection = document.getElementById('betweenSection');
+      const betweenStage = betweenSection && betweenSection.querySelector('.between-stage');
+      const artistsWord = document.getElementById('artistsWord');
+      const brandsWord = document.getElementById('brandsWord');
+      const artistsSide = artistsWord && artistsWord.closest('.side--artists');
+      const brandsSide = brandsWord && brandsWord.closest('.side--brands');
+      const middleLine = document.getElementById('middleLine');
+      const betweenMessage = document.getElementById('betweenMessage');
+
+      const differenceSection = document.getElementById('differenceSection');
+      const differenceStage = differenceSection && differenceSection.querySelector('.difference-stage');
+      const differenceOld = document.getElementById('differenceOld');
+      const differenceNew = document.getElementById('differenceNew');
+
+      const processSection = document.getElementById('processSection');
+      const processStage = processSection && processSection.querySelector('.process-stage');
+      const processSteps = [...document.querySelectorAll('.process-step')];
+      const brandsBenefitsSection = document.getElementById('brandsBenefitsSection');
+
       let stableViewportWidth = window.innerWidth;
-
-      const progressInSection = (section) => {
-        const rect = section.getBoundingClientRect();
-        // Mobile browser chrome changes window.innerHeight while scrolling.
-        // Keep a stable height so text progress cannot jump/bounce as bars collapse.
-        const viewportHeight = window.innerWidth <= 760
-          ? stableViewportHeight
-          : window.innerHeight;
-        const travel = rect.height - viewportHeight;
-        if (travel <= 0) return 0;
-        return clamp(-rect.top / travel);
-      };
-
-      const revealObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              revealObserver.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.14 }
-      );
-
-      document.querySelectorAll(".reveal").forEach((el) => {
-        revealObserver.observe(el);
-      });
-
-      const pinkGlow = document.getElementById("pinkGlow");
-      const greenGlow = document.getElementById("greenGlow");
-
-      const worldSection = document.getElementById("worldSection");
-      const worldLines = [...document.querySelectorAll(".world-line")];
-
-      const betweenSection = document.getElementById("betweenSection");
-      const artistsWord = document.getElementById("artistsWord");
-      const brandsWord = document.getElementById("brandsWord");
-      const middleLine = document.getElementById("middleLine");
-      const betweenMessage = document.getElementById("betweenMessage");
-
-      const differenceSection = document.getElementById("differenceSection");
-      const differenceOld = document.getElementById("differenceOld");
-      const differenceNew = document.getElementById("differenceNew");
-
-      const processSection = document.getElementById("processSection");
-      const processSteps = [...document.querySelectorAll(".process-step")];
-
-      // Cache the mobile WORLD chapter geometry against page scroll rather than
-      // re-reading a sticky element's viewport rect on every touch-scroll frame.
-      // This avoids tiny mobile-browser chrome/layout fluctuations around CONTENT IS INFINITE.
-      let worldSectionTop = 0;
-      let worldSectionTravel = 1;
-      const refreshWorldMetrics = () => {
-        if (!worldSection) return;
-        const rect = worldSection.getBoundingClientRect();
-        worldSectionTop = window.scrollY + rect.top;
-        worldSectionTravel = Math.max(1, rect.height - stableViewportHeight);
-      };
-
-      // Cache BETWEEN in document space too. On mobile, repeatedly reading
-      // getBoundingClientRect() from a sticky section can wobble by a fraction of a
-      // pixel as the browser chrome collapses/expands. Feeding that directly into
-      // large text transforms is what makes the ARTISTS / BRANDS intersection feel
-      // like it catches or bounces. Document-space scroll progress is stable.
-      let betweenSectionTop = 0;
-      let betweenSectionTravel = 1;
-      const refreshBetweenMetrics = () => {
-        if (!betweenSection) return;
-        const rect = betweenSection.getBoundingClientRect();
-        betweenSectionTop = window.scrollY + rect.top;
-        betweenSectionTravel = Math.max(1, rect.height - stableViewportHeight);
-      };
-
-      refreshWorldMetrics();
-      refreshBetweenMetrics();
-
+      let metrics = {};
+      let pageMaxScroll = 1;
       let ticking = false;
-      let betweenVisualProgress = null;
+      let desktopBetweenProgress = null;
+      let ambientHeld = false;
 
-      function update() {
+      const measureSticky = (section, stage) => {
+        if (!section || !stage) return { top: 0, travel: 1, end: 1, stageHeight: 1 };
+        const rect = section.getBoundingClientRect();
+        const top = window.scrollY + rect.top;
+        const sectionHeight = section.offsetHeight;
+        const stageHeight = stage.offsetHeight;
+        const travel = Math.max(1, sectionHeight - stageHeight);
+        return { top, travel, end: top + travel, stageHeight };
+      };
+
+      const measureAll = () => {
+        metrics.world = measureSticky(worldSection, worldStage);
+        metrics.between = measureSticky(betweenSection, betweenStage);
+        metrics.difference = measureSticky(differenceSection, differenceStage);
+        metrics.process = measureSticky(processSection, processStage);
+        if (brandsBenefitsSection) {
+          const br = brandsBenefitsSection.getBoundingClientRect();
+          metrics.mobileHold = {
+            top: metrics.world.top - metrics.world.stageHeight * 0.08,
+            end: window.scrollY + br.top + brandsBenefitsSection.offsetHeight
+          };
+        }
+        pageMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        desktopBetweenProgress = null;
+      };
+
+      const progressFor = (metric, scrollY) => {
+        if (!metric) return 0;
+        return clamp((scrollY - metric.top) / metric.travel);
+      };
+
+      const update = () => {
         ticking = false;
-
-        const doc = document.documentElement;
-        const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-        const global = clamp(window.scrollY / maxScroll);
+        const y = window.scrollY;
         const mobile = window.innerWidth <= 760;
-        const sensitiveMobileText = mobile &&
-          window.scrollY >= worldSectionTop - stableViewportHeight * 0.08 &&
-          window.scrollY <= betweenSectionTop + betweenSectionTravel + stableViewportHeight * 0.16;
+        const global = clamp(y / pageMaxScroll);
 
-        {
-          const meeting =
-            1 - Math.min(1, Math.abs(global - 0.42) / 0.20);
+        /* Ambient glows: preserve the existing look, but keep them still through the
+           two most typography-sensitive mobile chapters. No layout reads happen here. */
+        const sensitiveMobileText = mobile && metrics.mobileHold &&
+          y >= metrics.mobileHold.top && y <= metrics.mobileHold.end;
 
-          // Pull both glows lower near the end so COMING SOON stays cleaner.
+        if (pinkGlow && greenGlow) {
+          const meeting = 1 - Math.min(1, Math.abs(global - 0.42) / 0.20);
           const endDrop = clamp((global - 0.82) / 0.18);
 
-          if (mobile) {
-            if (sensitiveMobileText) {
-              // Large blurred layers + moving SVGs were competing for the mobile
-              // compositor exactly while the two sensitive text chapters animate.
-              // Keep the same ambient look, but hold these glows still for those frames.
-              pinkGlow.style.transform = `translate3d(-10vw, 11vh, 0) scale(1.10)`;
-              greenGlow.style.transform = `translate3d(11vw, -9vh, 0) scale(1.11)`;
+          if (mobile && sensitiveMobileText) {
+            if (!ambientHeld) {
+              pinkGlow.style.transform = 'translate3d(-10vw, 11vh, 0) scale(1.10)';
+              greenGlow.style.transform = 'translate3d(11vw, -9vh, 0) scale(1.11)';
               pinkGlow.style.opacity = '0.82';
               greenGlow.style.opacity = '0.80';
-            } else {
-              const driftA = Math.sin(global * Math.PI * 4.2);
-              const driftB = Math.cos(global * Math.PI * 3.6);
-              const pulse = 0.035 * Math.sin(global * Math.PI * 5.0);
-
-              const pinkX = -3 - global * 15 - meeting * 10 + driftA * 4.5;
-              const pinkY = 3 + global * 18 + meeting * 8 + driftB * 3.5 + endDrop * 8;
-              const greenX = 4 + global * 14 + meeting * 11 - driftB * 4.2;
-              const greenY = -3 - global * 15 - meeting * 7 - driftA * 3.2 + endDrop * 10;
-
-              pinkGlow.style.transform =
-                `translate3d(${pinkX.toFixed(2)}vw, ${pinkY.toFixed(2)}vh, 0) scale(${(1.02 + meeting * 0.16 + pulse).toFixed(3)})`;
-              greenGlow.style.transform =
-                `translate3d(${greenX.toFixed(2)}vw, ${greenY.toFixed(2)}vh, 0) scale(${(1.04 + meeting * 0.17 - pulse).toFixed(3)})`;
-
-              pinkGlow.style.opacity = String(0.76 + meeting * 0.13 - endDrop * 0.08);
-              greenGlow.style.opacity = String(0.74 + meeting * 0.13 - endDrop * 0.09);
+              ambientHeld = true;
             }
+          } else if (mobile) {
+            ambientHeld = false;
+            const driftA = Math.sin(global * Math.PI * 4.2);
+            const driftB = Math.cos(global * Math.PI * 3.6);
+            const pulse = 0.035 * Math.sin(global * Math.PI * 5.0);
+            const pinkX = -3 - global * 15 - meeting * 10 + driftA * 4.5;
+            const pinkY = 3 + global * 18 + meeting * 8 + driftB * 3.5 + endDrop * 8;
+            const greenX = 4 + global * 14 + meeting * 11 - driftB * 4.2;
+            const greenY = -3 - global * 15 - meeting * 7 - driftA * 3.2 + endDrop * 10;
+            pinkGlow.style.transform = `translate3d(${pinkX.toFixed(1)}vw, ${pinkY.toFixed(1)}vh, 0) scale(${(1.02 + meeting * 0.16 + pulse).toFixed(3)})`;
+            greenGlow.style.transform = `translate3d(${greenX.toFixed(1)}vw, ${greenY.toFixed(1)}vh, 0) scale(${(1.04 + meeting * 0.17 - pulse).toFixed(3)})`;
+            pinkGlow.style.opacity = String(0.76 + meeting * 0.13 - endDrop * 0.08);
+            greenGlow.style.opacity = String(0.74 + meeting * 0.13 - endDrop * 0.09);
           } else {
-            const pinkX =
-              -8 - global * 28 - meeting * 23 +
-              Math.sin(global * Math.PI * 5.2) * 10;
-
-            const pinkY =
-              5 + global * 34 + meeting * 14 +
-              Math.cos(global * Math.PI * 4.0) * 8 +
-              endDrop * 18;
-
-            const greenX =
-              7 + global * 25 + meeting * 24 -
-              Math.cos(global * Math.PI * 4.8) * 10;
-
-            const greenY =
-              -4 - global * 27 - meeting * 12 -
-              Math.sin(global * Math.PI * 3.8) * 8 +
-              endDrop * 22;
-
+            ambientHeld = false;
+            const pinkX = -8 - global * 28 - meeting * 23 + Math.sin(global * Math.PI * 5.2) * 10;
+            const pinkY = 5 + global * 34 + meeting * 14 + Math.cos(global * Math.PI * 4.0) * 8 + endDrop * 18;
+            const greenX = 7 + global * 25 + meeting * 24 - Math.cos(global * Math.PI * 4.8) * 10;
+            const greenY = -4 - global * 27 - meeting * 12 - Math.sin(global * Math.PI * 3.8) * 8 + endDrop * 22;
             const pulse = 0.06 * Math.sin(global * Math.PI * 6);
-
-            pinkGlow.style.transform =
-              `translate3d(${pinkX}vw, ${pinkY}vh, 0) scale(${1.02 + meeting * 0.28 + pulse})`;
-
-            greenGlow.style.transform =
-              `translate3d(${greenX}vw, ${greenY}vh, 0) scale(${1.04 + meeting * 0.30 - pulse})`;
-
+            pinkGlow.style.transform = `translate3d(${pinkX}vw, ${pinkY}vh, 0) scale(${1.02 + meeting * 0.28 + pulse})`;
+            greenGlow.style.transform = `translate3d(${greenX}vw, ${greenY}vh, 0) scale(${1.04 + meeting * 0.30 - pulse})`;
             pinkGlow.style.opacity = String(0.78 + meeting * 0.16 - endDrop * 0.10);
             greenGlow.style.opacity = String(0.76 + meeting * 0.16 - endDrop * 0.12);
           }
         }
 
-        // Mobile uses cached document-space geometry here. Sticky positioning plus
-        // browser chrome changes can otherwise introduce sub-pixel progress reversals.
-        const worldProgress = mobile
-          ? clamp((window.scrollY - worldSectionTop) / worldSectionTravel)
-          : progressInSection(worldSection);
-
+        /* WORLD. On mobile the typography is opacity-only. The sticky stage and the
+           animation now use exactly the same measured height, eliminating release jumps. */
+        const worldProgress = progressFor(metrics.world, y);
         const worldPosition = worldProgress * Math.max(1, worldLines.length - 1);
         worldLines.forEach((line, index) => {
           const distance = Math.abs(worldPosition - index);
           const emphasis = easeInOut(1 - clamp(distance / 0.95));
           line.style.opacity = String(lerp(0.16, 1, emphasis));
-
-          if (mobile && index === 2) {
-            // Do not write transform at all for CONTENT IS INFINITE on mobile.
-            // Even a zero 3D transform promotes the glyphs to a rasterized compositor
-            // layer, which can shimmer when the browser toolbar changes during scroll.
+          if (mobile) {
             line.style.removeProperty('transform');
           } else {
-            const worldY = lerp(7, 0, emphasis);
-            line.style.transform = mobile
-              ? `translate3d(0, ${worldY.toFixed(2)}px, 0)`
-              : `translate3d(0, ${worldY}px, 0) scale(${lerp(0.995, 1.015, emphasis)})`;
+            line.style.transform = `translate3d(0, ${lerp(7, 0, emphasis)}px, 0) scale(${lerp(0.995, 1.015, emphasis)})`;
           }
         });
 
-        const betweenTarget = mobile
-          ? clamp((window.scrollY - betweenSectionTop) / betweenSectionTravel)
-          : progressInSection(betweenSection);
-
-        if (betweenVisualProgress === null) betweenVisualProgress = betweenTarget;
-
-        // On mobile, document-space progress is already stable. A second JS inertia
-        // layer makes the words/message continue moving after touch momentum stops,
-        // which reads as a catch or rebound. Map directly to scroll instead.
-        betweenVisualProgress = mobile
-          ? betweenTarget
-          : lerp(betweenVisualProgress, betweenTarget, 0.18);
+        /* ARTISTS / BRANDS. No mobile inertia and no fractional 3D glyph transforms. */
+        const betweenTarget = progressFor(metrics.between, y);
+        if (desktopBetweenProgress === null) desktopBetweenProgress = betweenTarget;
+        if (mobile) {
+          desktopBetweenProgress = betweenTarget;
+        } else {
+          desktopBetweenProgress = lerp(desktopBetweenProgress, betweenTarget, 0.18);
+        }
 
         const meet = mobile
-          ? clamp((betweenVisualProgress - 0.035) / 0.41)
-          : clamp((betweenVisualProgress - 0.035) / 0.34);
+          ? clamp((desktopBetweenProgress - 0.035) / 0.41)
+          : clamp((desktopBetweenProgress - 0.035) / 0.34);
         const revealMessage = mobile
-          ? clamp((betweenVisualProgress - 0.38) / 0.30)
-          : clamp((betweenVisualProgress - 0.39) / 0.22);
+          ? clamp((desktopBetweenProgress - 0.38) / 0.30)
+          : clamp((desktopBetweenProgress - 0.39) / 0.22);
         const mobileWordFade = mobile
-          ? clamp((betweenVisualProgress - 0.28) / 0.33)
+          ? clamp((desktopBetweenProgress - 0.28) / 0.33)
           : revealMessage;
-
         const smoothMeet = easeInOut(meet);
         const smoothReveal = easeInOut(revealMessage);
         const smoothWordFade = easeInOut(mobileWordFade);
 
-        // Mobile: let the two worlds pass slightly through each other before
-        // dissolving. This removes the hard "touch" point without changing
-        // the following MIDWELT message or the desktop choreography.
         const startSpread = mobile ? stableViewportWidth * 0.030 : 4.6;
         const endApproach = mobile ? stableViewportWidth * 0.0425 : 1.25;
         const artistsX = lerp(-startSpread, endApproach, smoothMeet);
         const brandsX = lerp(startSpread, -endApproach, smoothMeet);
 
-        artistsWord.style.transform = mobile
-          ? `translate3d(${artistsX.toFixed(1)}px, 0, 0)`
-          : `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
-
-        brandsWord.style.transform = mobile
-          ? `translate3d(${brandsX.toFixed(1)}px, 0, 0)`
-          : `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
-
-        const wordOpacity = mobile
-          ? lerp(1, 0, smoothWordFade)
-          : lerp(1, 0.18, smoothReveal);
-        artistsWord.style.opacity = String(wordOpacity);
-        brandsWord.style.opacity = String(wordOpacity);
-
-        middleLine.style.transform =
-          `scaleY(${lerp(.55, 1, smoothMeet)})`;
-
-        const lineFade = mobile
-          ? 1 - clamp(smoothWordFade * 1.18)
-          : 1 - clamp(smoothReveal * 1.45);
-        middleLine.style.opacity =
-          String(lerp(.55, 1, smoothMeet) * lineFade);
-
-        betweenMessage.style.opacity =
-          String(smoothReveal);
-
-        const messageY = lerp(20, 0, smoothReveal);
-
-        // The message is opacity-only on mobile. Its physical position never changes,
-        // eliminating the raster catch that was visible as it appeared.
-        if (mobile) {
-          betweenMessage.style.removeProperty('transform');
-        } else {
-          betweenMessage.style.transform = `translateX(-50%) translateY(${messageY}px)`;
+        if (artistsWord && brandsWord) {
+          if (mobile) {
+            artistsWord.style.removeProperty('transform');
+            brandsWord.style.removeProperty('transform');
+            if (artistsSide) artistsSide.style.transform = `translateX(${artistsX.toFixed(2)}px)`;
+            if (brandsSide) brandsSide.style.transform = `translateX(${brandsX.toFixed(2)}px)`;
+          } else {
+            if (artistsSide) artistsSide.style.removeProperty('transform');
+            if (brandsSide) brandsSide.style.removeProperty('transform');
+            artistsWord.style.transform = `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
+            brandsWord.style.transform = `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
+          }
+          const wordOpacity = mobile ? lerp(1, 0, smoothWordFade) : lerp(1, 0.18, smoothReveal);
+          artistsWord.style.opacity = String(wordOpacity);
+          brandsWord.style.opacity = String(wordOpacity);
         }
 
-        if (!mobile && Math.abs(betweenTarget - betweenVisualProgress) > 0.0008) {
-          requestUpdate();
+        if (middleLine) {
+          middleLine.style.transform = `scaleY(${lerp(.55, 1, smoothMeet)})`;
+          const lineFade = mobile
+            ? 1 - clamp(smoothWordFade * 1.18)
+            : 1 - clamp(smoothReveal * 1.45);
+          middleLine.style.opacity = String(lerp(.55, 1, smoothMeet) * lineFade);
         }
 
-        const differenceProgress = progressInSection(differenceSection);
+        if (betweenMessage) {
+          betweenMessage.style.opacity = String(smoothReveal);
+          if (mobile) {
+            betweenMessage.style.removeProperty('transform');
+          } else {
+            betweenMessage.style.transform = `translateX(-50%) translateY(${lerp(20, 0, smoothReveal)}px)`;
+          }
+        }
 
-        const oldFade =
-          clamp((differenceProgress - 0.08) / 0.42);
+        if (!mobile && Math.abs(betweenTarget - desktopBetweenProgress) > 0.0008) requestUpdate();
 
-        const newRise =
-          clamp((differenceProgress - 0.28) / 0.38);
+        /* WE CREATE. Uses the real sticky-stage travel instead of viewport math. */
+        const differenceProgress = progressFor(metrics.difference, y);
+        const oldFade = clamp((differenceProgress - 0.08) / 0.42);
+        const newRise = clamp((differenceProgress - 0.28) / 0.38);
+        if (differenceOld && differenceNew) {
+          differenceOld.style.opacity = String(lerp(1, 0.20, oldFade));
+          differenceNew.style.opacity = String(lerp(0.18, 1, newRise));
+          if (mobile) {
+            differenceOld.style.removeProperty('transform');
+            differenceNew.style.removeProperty('transform');
+          } else {
+            differenceOld.style.transform = `translateY(${lerp(0, -18, oldFade)}px)`;
+            differenceNew.style.transform = `translateY(${lerp(22, 0, newRise)}px)`;
+          }
+        }
 
-        differenceOld.style.opacity =
-          String(lerp(1, 0.20, oldFade));
-
-        differenceOld.style.transform =
-          `translateY(${lerp(0, -18, oldFade)}px)`;
-
-        differenceNew.style.opacity =
-          String(lerp(0.18, 1, newRise));
-
-        differenceNew.style.transform =
-          `translateY(${lerp(22, 0, newRise)}px)`;
-
-        // MIDWELT process: three calm, overlapping scroll chapters.
+        /* IDENTIFY / SHAPE / BRING — same choreography principle as
+           WE DON'T CREATE -> WE CREATE: outgoing copy eases upward while the next
+           line rises from below. The overlap is deliberate, slow and continuous. */
         if (processSection && processSteps.length) {
-          const processProgress = progressInSection(processSection);
-          const windows = mobile
-            ? [
-                [0.00, 0.24],
-                [0.10, 0.50],
-                [0.46, 0.88]
-              ]
-            : [
-                [0.00, 0.30],
-                [0.15, 0.63],
-                [0.56, 0.94]
-              ];
+          const p = progressFor(metrics.process, y);
+          const exit1  = easeInOut(clamp((p - 0.22) / 0.20));
+          const enter2 = easeInOut(clamp((p - 0.24) / 0.20));
+          const exit2  = easeInOut(clamp((p - 0.58) / 0.20));
+          const enter3 = easeInOut(clamp((p - 0.60) / 0.20));
+          const vis = [1 - exit1, enter2 * (1 - exit2), enter3];
+          const shift = mobile ? 120 : 82;
+          const yPos = [
+            -shift * exit1,
+            shift * (1 - enter2) - shift * exit2,
+            shift * (1 - enter3)
+          ];
 
           processSteps.forEach((step, index) => {
-            const [start, end] = windows[index] || [0, 1];
-            const span = Math.max(0.001, end - start);
-            const local = clamp((processProgress - start) / span);
-            const fadeIn = easeInOut(clamp(local / 0.28));
-            const fadeOut = index === processSteps.length - 1
-              ? 1 - easeInOut(clamp((local - 0.88) / 0.12)) * 0.35
-              : 1 - easeInOut(clamp((local - 0.72) / 0.28));
-            const visibility = clamp(fadeIn * fadeOut);
-            const y = lerp(34, -26, easeInOut(local));
-            const scale = lerp(0.985, 1.01, visibility);
-
-            step.style.opacity = String(visibility);
-            step.style.transform = mobile
-              ? `translate3d(0, ${y}px, 0)`
-              : `translate3d(0, ${y}px, 0) scale(${scale})`;
+            step.style.opacity = String(clamp(vis[index] ?? 0));
+            const yMove = yPos[index] ?? 0;
+            if (mobile) {
+              step.style.setProperty('--process-y', `${yMove.toFixed(2)}px`);
+            } else {
+              step.style.transform = `translate3d(0, ${yMove.toFixed(2)}px, 0)`;
+            }
           });
         }
-      }
+      };
 
       function requestUpdate() {
         if (!ticking) {
@@ -2279,233 +2368,200 @@
         }
       }
 
-      window.addEventListener("scroll", requestUpdate, { passive: true });
-      window.addEventListener("resize", () => {
-        const currentWidth = window.innerWidth;
-        const widthChanged = Math.abs(currentWidth - stableViewportWidth) > 2;
-        const mobileNow = currentWidth <= 760;
-
-        // iOS/Android browser bars can fire resize events from height changes only.
-        // Ignore those for text layout/progress so animations do not jump.
-        if (mobileNow && !widthChanged) return;
-
-        stableViewportWidth = currentWidth;
-        stableViewportHeight = window.innerHeight;
-        refreshWorldMetrics();
-        refreshBetweenMetrics();
+      const remeasure = () => {
+        stableViewportWidth = window.innerWidth;
+        measureAll();
+        fitSpecialLines();
         requestUpdate();
-        fitSpecialLines();
+      };
+
+      window.addEventListener('scroll', requestUpdate, { passive: true });
+      window.addEventListener('resize', () => {
+        const widthChanged = Math.abs(window.innerWidth - stableViewportWidth) > 2;
+        const mobileNow = window.innerWidth <= 760;
+        /* Browser-bar height changes are deliberately ignored on mobile. svh sticky
+           stage heights do not change, so remeasuring here would create the jump. */
+        if (mobileNow && !widthChanged) return;
+        remeasure();
+      });
+      window.addEventListener('orientationchange', () => setTimeout(remeasure, 180));
+      window.addEventListener('load', () => {
+        remeasure();
+        requestAnimationFrame(remeasure);
+        setTimeout(remeasure, 160);
       });
 
-      window.addEventListener("load", () => {
-        refreshWorldMetrics();
-        refreshBetweenMetrics();
-        fitSpecialLines();
-        requestAnimationFrame(() => {
-          refreshWorldMetrics();
-          refreshBetweenMetrics();
-          fitSpecialLines();
-        });
-        setTimeout(fitSpecialLines, 120);
-      });
-      window.addEventListener("orientationchange", () => {
-        setTimeout(() => {
-          stableViewportWidth = window.innerWidth;
-          stableViewportHeight = window.innerHeight;
-          refreshWorldMetrics();
-          refreshBetweenMetrics();
-          fitSpecialLines();
-          requestUpdate();
-        }, 160);
-      });
-
-      // Run immediately and again after layout has settled.
+      measureAll();
       fitSpecialLines();
-      requestAnimationFrame(fitSpecialLines);
-
       update();
     })();
   </script>
 
   <script>
     (() => {
-      const topo = document.getElementById("geoTopography");
-      const orbits = document.getElementById("geoOrbits");
-      const coords = document.getElementById("geoCoordinates");
+      const topo = document.getElementById('geoTopography');
+      const orbits = document.getElementById('geoOrbits');
+      const coords = document.getElementById('geoCoordinates');
       if (!topo || !orbits || !coords) return;
 
-      const world = document.getElementById("worldSection");
-      const between = document.getElementById("betweenSection");
       let ticking = false;
+      let stableW = window.innerWidth;
+      let maxScroll = 1;
+      let lastP = -1;
+      const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+      const measure = () => {
+        stableW = window.innerWidth;
+        maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      };
 
       const updateGeo = () => {
-        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const p = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+        ticking = false;
         const mobile = window.innerWidth <= 760;
-        let holdGeo = false;
-        if (mobile && world && between) {
-          const worldTop = window.scrollY + world.getBoundingClientRect().top;
-          const betweenRect = between.getBoundingClientRect();
-          const betweenTop = window.scrollY + betweenRect.top;
-          const betweenBottom = betweenTop + betweenRect.height;
-          holdGeo = window.scrollY >= worldTop - window.innerHeight * .08 &&
-                    window.scrollY <= betweenBottom - window.innerHeight * .80;
-        }
+        const p = clamp01(window.scrollY / maxScroll);
+        if (Math.abs(p - lastP) < 0.00001) return;
+        lastP = p;
 
-        if (mobile && holdGeo) {
-          // Hold the decorative SVG layers still while the sensitive mobile typography
-          // is active. Their appearance remains, but they no longer compete for frame time.
-          topo.style.transform = 'translate3d(0,0,0) scale(1.035)';
-          orbits.style.transform = 'translate3d(0,0,0) scale(1.030)';
-          coords.style.transform = 'translate3d(0,0,0) scale(1.020)';
-        } else if (mobile) {
-          // Three lightweight parallax layers. Different phase/direction makes the
-          // background feel alive without touching page layout or text animation.
-          const waveA = Math.sin(p * Math.PI * 4.0);
-          const waveB = Math.cos(p * Math.PI * 3.2);
-          const waveC = Math.sin(p * Math.PI * 2.6 + 0.8);
-
-          topo.style.transform = `translate3d(${(-2.6 + p * 6.2 + waveA * 1.35).toFixed(2)}vw, ${(-2.2 + p * 5.4 + waveB * 0.9).toFixed(2)}vh, 0) rotate(${(-1.2 + p * 2.6 + waveC * 0.45).toFixed(2)}deg) scale(${(1.035 + waveB * 0.008).toFixed(3)})`;
-          orbits.style.transform = `translate3d(${(3.4 - p * 7.1 + waveB * 1.15).toFixed(2)}vw, ${(2.8 - p * 5.7 + waveC * 0.85).toFixed(2)}vh, 0) rotate(${(-4.2 + p * 7.8 + waveA * 0.65).toFixed(2)}deg) scale(${(1.030 - waveC * 0.007).toFixed(3)})`;
-          coords.style.transform = `translate3d(${(-1.8 + p * 4.2 + waveC * 0.75).toFixed(2)}vw, ${(1.8 - p * 3.8 + waveA * 0.65).toFixed(2)}vh, 0) rotate(${(-0.9 + p * 2.1 + waveB * 0.35).toFixed(2)}deg) scale(${(1.020 + waveA * 0.005).toFixed(3)})`;
+        if (mobile) {
+          /* Always moving on mobile, including the text chapters. Keep it cheap:
+             transform-only SVG motion, no blur/rotation/scale writes. */
+          const a = Math.sin(p * Math.PI * 3.4);
+          const b = Math.cos(p * Math.PI * 2.8 + 0.35);
+          const c = Math.sin(p * Math.PI * 2.2 + 1.05);
+          topo.style.transform = `translate3d(${(-2.2 + p * 5.4 + a * 0.75).toFixed(2)}vw, ${(-1.4 + p * 3.8 + b * 0.48).toFixed(2)}vh, 0)`;
+          orbits.style.transform = `translate3d(${(2.6 - p * 5.8 + b * 0.68).toFixed(2)}vw, ${(1.8 - p * 3.9 + c * 0.46).toFixed(2)}vh, 0)`;
+          coords.style.transform = `translate3d(${(-1.1 + p * 3.4 + c * 0.52).toFixed(2)}vw, ${(1.2 - p * 2.8 + a * 0.38).toFixed(2)}vh, 0)`;
         } else {
           topo.style.transform = `translate3d(${(-6.5 + p * 14.5).toFixed(2)}vw, ${(-8 + p * 19).toFixed(2)}vh, 0) rotate(${(-2.5 + p * 5).toFixed(2)}deg) scale(1.045)`;
           orbits.style.transform = `translate3d(${(7.5 - p * 15.5).toFixed(2)}vw, ${(6.5 - p * 14.5).toFixed(2)}vh, 0) rotate(${(-10.5 + p * 21).toFixed(2)}deg) scale(1.035)`;
           coords.style.transform = `translate3d(${(-3.5 + p * 7.5).toFixed(2)}vw, ${(4.5 - p * 9.5).toFixed(2)}vh, 0) rotate(${(-1.8 + p * 4.2).toFixed(2)}deg) scale(1.025)`;
         }
-        ticking = false;
       };
 
-      const requestGeoUpdate = () => {
+      const request = () => {
         if (!ticking) {
           ticking = true;
           requestAnimationFrame(updateGeo);
         }
       };
-
-      window.addEventListener("scroll", requestGeoUpdate, { passive: true });
-      window.addEventListener("resize", requestGeoUpdate);
+      window.addEventListener('scroll', request, { passive: true });
+      window.addEventListener('resize', () => {
+        const widthChanged = Math.abs(window.innerWidth - stableW) > 2;
+        if (window.innerWidth <= 760 && !widthChanged) return;
+        measure(); lastP = -1; request();
+      });
+      window.addEventListener('orientationchange', () => setTimeout(() => { measure(); lastP = -1; request(); }, 180));
+      window.addEventListener('load', () => { measure(); lastP = -1; request(); });
+      measure();
       updateGeo();
     })();
   </script>
 
 
-
   <script>
     (() => {
-      const clamp01 = v => Math.max(0, Math.min(1, v));
-      const smooth = t => t * t * (3 - 2 * t);
+      const clamp01 = (v) => Math.max(0, Math.min(1, v));
+      const smooth = (t) => t * t * (3 - 2 * t);
       const chapters = [...document.querySelectorAll('.audience-chapter')];
       let metrics = [];
       let raf = 0;
-      let stableH = window.innerHeight;
       let stableW = window.innerWidth;
 
       const measure = () => {
-        metrics = chapters.map(section => {
+        stableW = window.innerWidth;
+        metrics = chapters.map((section) => {
+          const stage = section.querySelector('.audience-stage');
           const r = section.getBoundingClientRect();
+          const top = window.scrollY + r.top;
+          const stageHeight = stage ? stage.offsetHeight : window.innerHeight;
+          const progress = section.querySelector('.audience-progress');
           return {
-            section,
-            top: window.scrollY + r.top,
-            travel: Math.max(1, r.height - stableH)
+            section, top,
+            travel: Math.max(1, section.offsetHeight - stageHeight),
+            core: section.querySelector('.audience-core'),
+            signal: section.querySelector('.audience-signal'),
+            nodes: [...section.querySelectorAll('.audience-node')],
+            progress,
+            progressBar: progress && progress.querySelector('span'),
+            close: section.querySelector('.audience-close'),
+            lastP: null
           };
         });
       };
 
-      const bell = (p, start, end, fade = .16) => {
-        if (p <= start || p >= end) return 0;
-        const span = end - start;
-        const local = (p - start) / span;
-        const edge = Math.min(.46, fade);
-        if (local < edge) return smooth(clamp01(local / edge));
-        if (local > 1 - edge) return smooth(clamp01((1 - local) / edge));
-        return 1;
+      const windowVis = (p, inA, inB, outA, outB) => {
+        const enter = smooth(clamp01((p - inA) / Math.max(.001, inB - inA)));
+        const exit = smooth(clamp01((p - outA) / Math.max(.001, outB - outA)));
+        return clamp01(enter * (1 - exit));
       };
 
       const paint = () => {
         raf = 0;
-        metrics.forEach(({section, top, travel}) => {
-          const p = clamp01((window.scrollY - top) / travel);
-          const core = section.querySelector('.audience-core');
-          const signal = section.querySelector('.audience-signal');
-          const nodes = [...section.querySelectorAll('.audience-node')];
-          const progress = section.querySelector('.audience-progress');
-          const progressBar = progress && progress.querySelector('span');
-          const close = section.querySelector('.audience-close');
+        const mobile = window.innerWidth <= 760;
+        const y = window.scrollY;
 
-          // Intro has its own clean screen, then leaves completely before benefits begin.
-          const introIn = smooth(clamp01(p / .10));
-          const introOut = smooth(clamp01((p - .18) / .09));
+        metrics.forEach((item) => {
+          const { top, travel, core, signal, nodes, progress, progressBar, close } = item;
+          const p = clamp01((y - top) / travel);
+          if (item.lastP !== null && Math.abs(p - item.lastP) < 0.00001) return;
+          item.lastP = p;
+
+          const introIn = smooth(clamp01(p / .07));
+          const introOut = smooth(clamp01((p - .16) / .08));
           const introVis = introIn * (1 - introOut);
-          core.style.opacity = String(introVis);
-          core.style.transform = `translate3d(-50%, calc(-50% + ${(18 - introIn * 18 - introOut * 18).toFixed(2)}px), 0)`;
+          if (core) {
+            core.style.opacity = String(introVis);
+            if (!mobile) core.style.transform = `translate3d(-50%, calc(-50% + ${(14 - introIn * 14 - introOut * 12).toFixed(2)}px), 0)`;
+          }
 
-          // A thin accent trace replaces the old glowing dot.
-          const signalIn = smooth(clamp01((p - .06) / .12));
-          const signalOut = smooth(clamp01((p - .76) / .10));
-          signal.style.opacity = String(signalIn * (1 - signalOut) * .82);
-          signal.style.transform = `translateX(-50%) scaleX(${signalIn.toFixed(3)})`;
+          const signalIn = smooth(clamp01((p - .05) / .10));
+          const signalOut = smooth(clamp01((p - .84) / .08));
+          if (signal) {
+            signal.style.opacity = String(signalIn * (1 - signalOut) * .82);
+            signal.style.transform = `translateX(-50%) scaleX(${signalIn.toFixed(3)})`;
+          }
 
-          // Four benefits, deliberately separated so text never stacks on itself.
           const windows = [
-            [.285, .385],
-            [.405, .505],
-            [.525, .625],
-            [.645, .745]
+            [.23, .30, .36, .43],
+            [.41, .48, .54, .61],
+            [.59, .66, .72, .79],
+            [.77, .84, .90, .97]
           ];
           nodes.forEach((node, i) => {
-            const [a, b] = windows[i];
-            const vis = bell(p, a, b, .22);
-            const local = clamp01((p - a) / (b - a));
-            const y = 22 - local * 44;
-            node.style.opacity = String(vis);
-            node.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+            const [inA, inB, outA, outB] = windows[i];
+            const enter = smooth(clamp01((p - inA) / Math.max(.001, inB - inA)));
+            const exit = smooth(clamp01((p - outA) / Math.max(.001, outB - outA)));
+            node.style.opacity = String(windowVis(p, inA, inB, outA, outB));
+            if (!mobile) node.style.transform = `translate3d(0, ${(14 * (1 - enter) - 14 * exit).toFixed(2)}px, 0)`;
           });
 
           const benefitStart = windows[0][0];
-          const benefitEnd = windows[windows.length - 1][1];
+          const benefitEnd = windows[windows.length - 1][3];
           const benefitP = clamp01((p - benefitStart) / (benefitEnd - benefitStart));
-          const progressVis = smooth(clamp01((p - .25) / .06)) * (1 - smooth(clamp01((p - .76) / .06)));
+          const progressVis = smooth(clamp01((p - .21) / .06)) * (1 - smooth(clamp01((p - .98) / .02)));
           if (progress) progress.style.opacity = String(progressVis * .9);
           if (progressBar) progressBar.style.transform = `scaleX(${benefitP.toFixed(3)})`;
 
-          // Final statement gets a clean screen as well.
-          const closeIn = smooth(clamp01((p - .79) / .12));
-          close.style.opacity = String(closeIn);
-          close.style.transform = `translate3d(-50%, calc(-50% + ${(24 - closeIn * 24).toFixed(2)}px), 0)`;
+          const closeIn = smooth(clamp01((p - .94) / .055));
+          if (close) {
+            close.style.opacity = String(closeIn);
+            if (!mobile) close.style.transform = `translate3d(-50%, calc(-50% + ${(18 - closeIn * 18).toFixed(2)}px), 0)`;
+          }
         });
       };
 
-      const request = () => {
-        if (!raf) raf = requestAnimationFrame(paint);
-      };
-
-      window.addEventListener('scroll', request, {passive:true});
+      const request = () => { if (!raf) raf = requestAnimationFrame(paint); };
+      const remeasure = () => { measure(); request(); };
+      window.addEventListener('scroll', request, { passive: true });
       window.addEventListener('resize', () => {
-        const w = window.innerWidth;
-        const widthChanged = Math.abs(w - stableW) > 2;
-        if (w <= 760 && !widthChanged) return;
-        stableW = w;
-        stableH = window.innerHeight;
-        measure();
-        request();
+        const widthChanged = Math.abs(window.innerWidth - stableW) > 2;
+        if (window.innerWidth <= 760 && !widthChanged) return;
+        remeasure();
       });
-      window.addEventListener('orientationchange', () => {
-        setTimeout(() => {
-          stableW = window.innerWidth;
-          stableH = window.innerHeight;
-          measure();
-          request();
-        }, 180);
-      });
-      window.addEventListener('load', () => {
-        stableH = window.innerHeight;
-        stableW = window.innerWidth;
-        measure();
-        request();
-      });
+      window.addEventListener('orientationchange', () => setTimeout(remeasure, 180));
+      window.addEventListener('load', () => { remeasure(); requestAnimationFrame(remeasure); setTimeout(remeasure, 160); });
       measure();
-      request();
+      paint();
     })();
   </script>
 </body>
