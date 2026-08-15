@@ -1269,6 +1269,48 @@
         transform: translate3d(0, 34px, 0);
       }
     }
+
+
+    /* =========================================================
+       REQUESTED AUG 15 MICRO-TUNING ONLY
+       - shorter transition after WE CREATE
+       - larger clickable email CTA
+       Existing typography/layout elsewhere is intentionally untouched.
+    ========================================================= */
+
+    /* Reduce only the sticky travel between WE CREATE and WE IDENTIFY. */
+    .difference {
+      min-height: 106svh;
+    }
+
+    /* Final CTA: same composition, slightly stronger email address. */
+    .coming-soon-text {
+      font-size: clamp(40px, 5.8vw, 88px) !important;
+      color: var(--white);
+      text-decoration: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .coming-soon-text:hover,
+    .coming-soon-text:focus-visible {
+      color: var(--pink);
+      outline: none;
+    }
+
+    @media (max-width: 760px) {
+      .difference {
+        min-height: 104svh;
+      }
+
+      .coming-soon-text {
+        font-size: clamp(30px, 8.4vw, 40px) !important;
+        letter-spacing: -0.055em;
+        white-space: nowrap;
+      }
+    }
+
 </style>
 </head>
 
@@ -1430,8 +1472,8 @@
     <section class="section coming-soon">
       <div class="inner coming-soon-inner reveal">
         <div class="coming-soon-stack">
-          <div class="coming-soon-closing">WHAT HAPPENS IN BETWEEN?</div>
-          <div class="coming-soon-text display display--small">COMING SOON</div>
+          <div class="coming-soon-closing">CREATE THE CONNECTION.</div>
+          <a class="coming-soon-text display display--small" href="mailto:hello@midwelt.com" aria-label="Email MIDWELT at hello@midwelt.com">HELLO@MIDWELT.COM</a>
           <div class="coming-soon-signature">MIDWELT 2026</div>
         </div>
       </div>
@@ -1529,6 +1571,7 @@
 
       let ticking = false;
       let betweenVisualProgress = null;
+      let contentVisualPosition = null;
 
       function update() {
         ticking = false;
@@ -1598,18 +1641,38 @@
 
         const worldProgress = progressInSection(worldSection);
 
-        // Continuous emphasis instead of discrete active-state jumps.
-        // This preserves the dissolve but removes the "catch" on mobile scroll.
+        // Keep the existing motion for every line. On mobile only, the third
+        // line (CONTENT IS INFINITE.) gets a tiny visual damper so touch-scroll
+        // deltas cannot make it shimmer or bounce around its emphasis peak.
         const worldPosition = worldProgress * Math.max(1, worldLines.length - 1);
+        if (!mobile) {
+          contentVisualPosition = worldPosition;
+        } else if (contentVisualPosition === null) {
+          contentVisualPosition = worldPosition;
+        }
+
+        if (mobile && worldPosition >= 1.15 && worldPosition <= 2.85) {
+          contentVisualPosition = lerp(contentVisualPosition, worldPosition, 0.34);
+        } else if (mobile) {
+          contentVisualPosition = worldPosition;
+        }
+
         worldLines.forEach((line, index) => {
-          const distance = Math.abs(worldPosition - index);
+          const visualPosition = mobile && index === 2
+            ? contentVisualPosition
+            : worldPosition;
+          const distance = Math.abs(visualPosition - index);
           const emphasis = easeInOut(1 - clamp(distance / 0.95));
           line.style.opacity = String(lerp(0.16, 1, emphasis));
-          const worldY = lerp(7, 0, emphasis);
+          const worldY = lerp(index === 2 && mobile ? 4 : 7, 0, emphasis);
           line.style.transform = mobile
-            ? `translate3d(0, ${worldY}px, 0)`
+            ? `translate3d(0, ${worldY.toFixed(2)}px, 0)`
             : `translate3d(0, ${worldY}px, 0) scale(${lerp(0.995, 1.015, emphasis)})`;
         });
+
+        if (mobile && Math.abs(contentVisualPosition - worldPosition) > 0.002) {
+          requestUpdate();
+        }
 
         const betweenTarget = progressInSection(betweenSection);
 
@@ -1622,34 +1685,48 @@
           ? betweenTarget
           : lerp(betweenVisualProgress, betweenTarget, 0.18);
 
-        const meet = clamp((betweenVisualProgress - 0.035) / 0.34);
-        const revealMessage = clamp((betweenVisualProgress - 0.39) / 0.22);
+        const meet = mobile
+          ? clamp((betweenVisualProgress - 0.035) / 0.39)
+          : clamp((betweenVisualProgress - 0.035) / 0.34);
+        const revealMessage = mobile
+          ? clamp((betweenVisualProgress - 0.41) / 0.23)
+          : clamp((betweenVisualProgress - 0.39) / 0.22);
+        const mobileWordFade = mobile
+          ? clamp((betweenVisualProgress - 0.30) / 0.28)
+          : revealMessage;
 
         const smoothMeet = easeInOut(meet);
         const smoothReveal = easeInOut(revealMessage);
+        const smoothWordFade = easeInOut(mobileWordFade);
 
-        // Start as two clearly separate worlds, then converge smoothly toward MIDWELT.
+        // Mobile: let the two worlds pass slightly through each other before
+        // dissolving. This removes the hard "touch" point without changing
+        // the following MIDWELT message or the desktop choreography.
         const startSpread = mobile ? 3.0 : 4.6;
-        const endApproach = mobile ? 1.15 : 1.25;
+        const endApproach = mobile ? 4.25 : 1.25;
         const artistsX = lerp(-startSpread, endApproach, smoothMeet);
         const brandsX = lerp(startSpread, -endApproach, smoothMeet);
 
         artistsWord.style.transform = mobile
-          ? `translate3d(${artistsX}vw, 0, 0)`
+          ? `translate3d(${artistsX.toFixed(2)}vw, 0, 0)`
           : `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
         brandsWord.style.transform = mobile
-          ? `translate3d(${brandsX}vw, 0, 0)`
+          ? `translate3d(${brandsX.toFixed(2)}vw, 0, 0)`
           : `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
-        const wordOpacity = lerp(1, 0.18, smoothReveal);
+        const wordOpacity = mobile
+          ? lerp(1, 0, smoothWordFade)
+          : lerp(1, 0.18, smoothReveal);
         artistsWord.style.opacity = String(wordOpacity);
         brandsWord.style.opacity = String(wordOpacity);
 
         middleLine.style.transform =
           `scaleY(${lerp(.55, 1, smoothMeet)})`;
 
-        const lineFade = 1 - clamp(smoothReveal * 1.45);
+        const lineFade = mobile
+          ? 1 - clamp(smoothWordFade * 1.18)
+          : 1 - clamp(smoothReveal * 1.45);
         middleLine.style.opacity =
           String(lerp(.55, 1, smoothMeet) * lineFade);
 
@@ -1687,8 +1764,8 @@
         if (processSection && processSteps.length) {
           const processProgress = progressInSection(processSection);
           const windows = [
-            [0.00, 0.34],
-            [0.25, 0.63],
+            [0.00, 0.30],
+            [0.15, 0.63],
             [0.56, 0.94]
           ];
 
