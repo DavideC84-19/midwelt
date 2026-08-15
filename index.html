@@ -2079,6 +2079,55 @@
       }
     }
 
+
+
+    /* =========================================================
+       AUG 16 — FINAL MOBILE CADENCE + LIVING FUTURE TEXTURE
+       The anti-jitter manual-fixed architecture is intentionally untouched.
+       Only the amount of scroll travel is reduced where it was still feeling long.
+       FUTURE gets an ultra-slow background-position drift inside each glyph only.
+       ========================================================= */
+    @media (max-width: 760px) {
+      /* One decisive finger scroll (roughly 1–1.5 gestures) should be enough
+         to hand off to the next message, without making the chapter feel rushed. */
+      .process { min-height: 190svh !important; }
+      .audience-chapter { min-height: 260svh !important; }
+    }
+
+    /* Preserve each letter's existing independent pattern origin, then let only
+       the texture coordinates drift. The glyph itself never transforms or moves. */
+    .pattern-shift-0 { --mw-px: 0px;   --mw-py: 0px;   --mw-dx: 13px; --mw-dy: -8px; --mw-dur: 27s; background-position: var(--mw-px) var(--mw-py); }
+    .pattern-shift-1 { --mw-px: -13px; --mw-py: -9px;  --mw-dx: -12px; --mw-dy: 9px; --mw-dur: 29s; background-position: var(--mw-px) var(--mw-py); }
+    .pattern-shift-2 { --mw-px: -27px; --mw-py: -17px; --mw-dx: 11px; --mw-dy: 12px; --mw-dur: 25s; background-position: var(--mw-px) var(--mw-py); }
+    .pattern-shift-3 { --mw-px: -8px;  --mw-py: -31px; --mw-dx: -14px; --mw-dy: -7px; --mw-dur: 30s; background-position: var(--mw-px) var(--mw-py); }
+    .pattern-shift-4 { --mw-px: -35px; --mw-py: -5px;  --mw-dx: 12px; --mw-dy: 7px; --mw-dur: 28s; background-position: var(--mw-px) var(--mw-py); }
+    .pattern-shift-5 { --mw-px: -21px; --mw-py: -38px; --mw-dx: -11px; --mw-dy: -12px; --mw-dur: 29s; background-position: var(--mw-px) var(--mw-py); }
+
+    @keyframes mwFutureTextureDrift {
+      from { background-position: var(--mw-px) var(--mw-py); }
+      to {
+        background-position:
+          calc(var(--mw-px) + var(--mw-dx))
+          calc(var(--mw-py) + var(--mw-dy));
+      }
+    }
+
+    .future .pattern-letter {
+      animation-name: mwFutureTextureDrift;
+      animation-duration: var(--mw-dur, 40s);
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+      animation-play-state: paused;
+    }
+
+    .future.mw-texture-live .pattern-letter {
+      animation-play-state: running;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .future .pattern-letter { animation: none !important; }
+    }
 </style>
 </head>
 
@@ -3126,5 +3175,23 @@
     })();
   </script>
 
+
+
+  <script>
+    /* FUTURE living texture: viewport-gated and completely independent from the
+       mobile scroll controller. It changes background-position only; it never
+       touches transforms, sticky/fixed state, scroll metrics, or typography geometry. */
+    (() => {
+      const future = document.querySelector('.future');
+      if (!future || !('IntersectionObserver' in window)) return;
+      const textureObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const live = entry.isIntersecting && entry.intersectionRatio >= 0.12;
+          entry.target.classList.toggle('mw-texture-live', live);
+        });
+      }, { threshold: [0, 0.12, 0.35] });
+      textureObserver.observe(future);
+    })();
+  </script>
 </body>
 </html>
