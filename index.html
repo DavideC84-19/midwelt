@@ -2071,6 +2071,253 @@
       .audience-stage.mw-audience-4 .audience-progress span { transform: scaleX(1) !important; }
     }
 
+
+
+    /* =========================================================
+       MOBILE NATIVE-FLOW FIX — FINAL
+       iOS/Safari-safe architecture: no sticky text stages, no scroll-scrubbed
+       text transforms, no fixed-position typography. On phones the text lives
+       in normal document flow and only gets a one-time opacity reveal.
+       Desktop is untouched.
+       ========================================================= */
+    @media (max-width: 760px) {
+      /* The actual root fix: remove sticky/compositor-managed text stages. */
+      .world-stage,
+      .between-stage,
+      .difference-stage,
+      .process-stage,
+      .audience-stage {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+        contain: none !important;
+      }
+
+      .world,
+      .between,
+      .difference,
+      .process,
+      .audience-chapter {
+        min-height: 0 !important;
+        height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+
+      /* WORLD — each sentence gets its own natural scroll scene. */
+      .world-stage { display: block !important; }
+      .world-lines {
+        display: block !important;
+        width: 100% !important;
+        padding-inline: 16px !important;
+      }
+      .world-line {
+        min-height: 54svh !important;
+        margin: 0 !important;
+        padding: 10svh 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        transform: none !important;
+        will-change: auto !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+      }
+      .world-line + .world-line { margin-top: 0 !important; }
+
+      /* ARTISTS / BRANDS -> MIDWELT — two consecutive native-flow scenes. */
+      .between-stage { display: block !important; }
+      .between-stage > .inner {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .between-layout {
+        min-height: 0 !important;
+        display: block !important;
+      }
+      .world-lockup {
+        min-height: 92svh !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-inline: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .side--artists,
+      .side--brands,
+      .world-word {
+        transform: none !important;
+        will-change: auto !important;
+      }
+      .world-word { opacity: 1 !important; }
+      .separator {
+        opacity: 1 !important;
+        transform: none !important;
+        will-change: auto !important;
+      }
+      .between-message {
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        min-height: 82svh !important;
+        padding: 12svh 18px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        will-change: auto !important;
+      }
+      .between-message h2 { width: 100% !important; }
+
+      /* WE DON'T / WE CREATE — normal-flow blocks, no sticky crossfade surface. */
+      .difference-stage { display: block !important; }
+      .difference-stage .inner {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 18px !important;
+      }
+      .difference-old,
+      .difference-new {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 72svh !important;
+        margin: 0 !important;
+        padding: 24svh 0 !important;
+        transform: none !important;
+        text-align: center !important;
+        will-change: auto !important;
+      }
+
+      /* IDENTIFY / SHAPE / BRING — three real blocks instead of one sticky stack. */
+      .process-stage { display: block !important; }
+      .process-stage .inner {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+      .process-step {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        min-height: 80svh !important;
+        margin: 0 !important;
+        padding: 24svh 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        will-change: auto !important;
+        pointer-events: auto !important;
+      }
+
+      /* FOR ARTISTS / FOR BRANDS — intro, four benefits and closing become native
+         vertical scenes. No absolute stack means there is nothing for Safari to
+         re-composite or shake while the browser bars change during touch scrolling. */
+      .audience-stage {
+        display: block !important;
+        padding: 28px 18px 0 !important;
+      }
+      .audience-stage::before { display: none !important; }
+      .audience-label {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin: 0 !important;
+      }
+      .audience-signal {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 116px !important;
+        margin: 24px auto 0 !important;
+        transform: none !important;
+        opacity: .72 !important;
+        will-change: auto !important;
+      }
+      .audience-core {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        min-height: 90svh !important;
+        padding: 18svh 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        will-change: auto !important;
+      }
+      .audience-reel {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+      }
+      .audience-node {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        min-height: 72svh !important;
+        padding: 18svh 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        will-change: auto !important;
+      }
+      .audience-progress { display: none !important; }
+      .audience-close {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        min-height: 88svh !important;
+        margin: 0 !important;
+        padding: 20svh 0 24svh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        will-change: auto !important;
+      }
+
+      /* One-time opacity reveal only. No fade-out and no transform means a small
+         scroll correction can never make a sentence oscillate between two states. */
+      .mw-native-scene {
+        opacity: .18 !important;
+        transform: none !important;
+        transition: opacity 520ms cubic-bezier(.22, 1, .36, 1) !important;
+        will-change: auto !important;
+      }
+      .mw-native-scene.mw-native-visible {
+        opacity: 1 !important;
+      }
+
+      /* Keep generic reveals transform-free on mobile as well. */
+      .reveal,
+      .reveal.is-visible {
+        transform: none !important;
+      }
+    }
 </style>
 </head>
 
@@ -2823,112 +3070,62 @@
   </script>
 
   <script>
-    /* MOBILE MOTION V4
-       Root fix: on phones, one RAF owns all scroll work. Text changes state only when
-       a sentence boundary is crossed; CSS performs the actual transition. The only
-       continuously updated properties are the three lightweight background transforms. */
+    /* MOBILE NATIVE-FLOW CONTROLLER
+       Text is deliberately NOT controlled by scroll position on phones.
+       The only continuous scroll work left is the decorative background motion. */
     (() => {
       if (!window.matchMedia('(max-width: 760px)').matches) return;
+
+      const scenes = [
+        ...document.querySelectorAll('.world-line'),
+        document.querySelector('.world-lockup'),
+        document.getElementById('betweenMessage'),
+        document.getElementById('differenceOld'),
+        document.getElementById('differenceNew'),
+        ...document.querySelectorAll('.process-step'),
+        ...document.querySelectorAll('.audience-core'),
+        ...document.querySelectorAll('.audience-node'),
+        ...document.querySelectorAll('.audience-close')
+      ].filter(Boolean);
+
+      scenes.forEach((node) => node.classList.add('mw-native-scene'));
+
+      const reveal = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('mw-native-visible');
+          reveal.unobserve(entry.target);
+        });
+      }, {
+        threshold: 0.14,
+        rootMargin: '0px 0px -12% 0px'
+      });
+      scenes.forEach((node) => reveal.observe(node));
+
+      const topo = document.getElementById('geoTopography');
+      const orbits = document.getElementById('geoOrbits');
+      const coords = document.getElementById('geoCoordinates');
+      if (!topo || !orbits || !coords) return;
 
       const clamp01 = (v) => Math.max(0, Math.min(1, v));
       const dpr = Math.max(1, Math.min(4, window.devicePixelRatio || 1));
       const snap = (v) => Math.round(v * dpr) / dpr;
 
-      const worldSection = document.getElementById('worldSection');
-      const worldStage = worldSection && worldSection.querySelector('.world-stage');
-      const worldLines = [...document.querySelectorAll('.world-line')];
-
-      const betweenSection = document.getElementById('betweenSection');
-      const betweenStage = betweenSection && betweenSection.querySelector('.between-stage');
-
-      const differenceSection = document.getElementById('differenceSection');
-      const differenceStage = differenceSection && differenceSection.querySelector('.difference-stage');
-
-      const processSection = document.getElementById('processSection');
-      const processStage = processSection && processSection.querySelector('.process-stage');
-      const processSteps = [...document.querySelectorAll('.process-step')];
-
-      const audienceSections = [...document.querySelectorAll('.audience-chapter')];
-      const topo = document.getElementById('geoTopography');
-      const orbits = document.getElementById('geoOrbits');
-      const coords = document.getElementById('geoCoordinates');
-
       let stableW = window.innerWidth;
-      let stableH = (worldStage && worldStage.offsetHeight) || window.innerHeight;
-      let maxScroll = 1;
-      let metrics = {};
-      let audienceMetrics = [];
+      let stableH = window.innerHeight;
+      let maxScroll = Math.max(1, document.documentElement.scrollHeight - stableH);
+      let target = clamp01(window.scrollY / maxScroll);
+      let current = target;
       let raf = 0;
-      let lastY = window.scrollY;
-      let targetGeo = 0;
-      let currentGeo = 0;
-
-      let worldState = -1;
-      let processState = -1;
-      let audienceStates = [];
-      let betweenMet = false;
-      let betweenMessage = false;
-      let differenceNew = false;
-
-      const measureOne = (section, stage) => {
-        if (!section || !stage) return { top: 0, travel: 1 };
-        const rect = section.getBoundingClientRect();
-        const top = window.scrollY + rect.top;
-        return {
-          top,
-          travel: Math.max(1, section.offsetHeight - stage.offsetHeight)
-        };
-      };
 
       const measure = () => {
         stableW = window.innerWidth;
-        stableH = (worldStage && worldStage.offsetHeight) || stableH || window.innerHeight;
-        metrics.world = measureOne(worldSection, worldStage);
-        metrics.between = measureOne(betweenSection, betweenStage);
-        metrics.difference = measureOne(differenceSection, differenceStage);
-        metrics.process = measureOne(processSection, processStage);
-        audienceMetrics = audienceSections.map((section) => ({
-          section,
-          stage: section.querySelector('.audience-stage'),
-          ...measureOne(section, section.querySelector('.audience-stage'))
-        }));
+        stableH = window.innerHeight;
         maxScroll = Math.max(1, document.documentElement.scrollHeight - stableH);
+        target = current = clamp01(window.scrollY / maxScroll);
       };
 
-      const progress = (m, y) => m ? clamp01((y - m.top) / m.travel) : 0;
-
-      /* Hysteresis means a one/two-pixel scroll correction cannot repeatedly flip
-         a sentence around its boundary. */
-      const stepped = (p, cuts, previous, direction) => {
-        if (previous < 0) {
-          let direct = 0;
-          while (direct < cuts.length && p >= cuts[direct]) direct++;
-          return direct;
-        }
-        let next = previous;
-        const h = .012;
-        if (direction >= 0) {
-          while (next < cuts.length && p >= cuts[next] + h) next++;
-        } else {
-          while (next > 0 && p < cuts[next - 1] - h) next--;
-        }
-        return next;
-      };
-
-      const hystBool = (p, current, onAt, offAt) => current ? p > offAt : p >= onAt;
-
-      const setOnlyActive = (nodes, activeIndex) => {
-        nodes.forEach((node, i) => node.classList.toggle('mw-active', i === activeIndex));
-      };
-
-      const setAudienceState = (stage, state) => {
-        for (let i = 0; i <= 5; i++) stage.classList.toggle(`mw-audience-${i}`, i === state);
-      };
-
-      const applyGeo = (p) => {
-        if (!topo || !orbits || !coords) return;
-        /* Pixel transforms use the stable layout viewport captured at measurement time;
-           they do not depend on mobile browser-bar vh changes. */
+      const apply = (p) => {
         const a = Math.sin(p * Math.PI * 3.4);
         const b = Math.cos(p * Math.PI * 2.8 + .35);
         const c = Math.sin(p * Math.PI * 2.2 + 1.05);
@@ -2943,101 +3140,32 @@
         coords.style.transform = `translate3d(${tx3}px, ${ty3}px, 0)`;
       };
 
-      const paintStates = () => {
-        const y = window.scrollY;
-        const direction = y >= lastY ? 1 : -1;
-        lastY = y;
-
-        const wp = progress(metrics.world, y);
-        const nextWorld = stepped(wp, [.24, .50, .76], worldState, direction);
-        if (nextWorld !== worldState) {
-          worldState = nextWorld;
-          setOnlyActive(worldLines, worldState);
-        }
-
-        const bp = progress(metrics.between, y);
-        const nextMet = hystBool(bp, betweenMet, .17, .11);
-        const nextMessage = hystBool(bp, betweenMessage, .54, .47);
-        if (nextMet !== betweenMet) {
-          betweenMet = nextMet;
-          if (betweenStage) betweenStage.classList.toggle('mw-met', betweenMet);
-        }
-        if (nextMessage !== betweenMessage) {
-          betweenMessage = nextMessage;
-          if (betweenStage) betweenStage.classList.toggle('mw-message', betweenMessage);
-        }
-
-        const dp = progress(metrics.difference, y);
-        const nextDifference = hystBool(dp, differenceNew, .43, .36);
-        if (nextDifference !== differenceNew) {
-          differenceNew = nextDifference;
-          if (differenceStage) differenceStage.classList.toggle('mw-new', differenceNew);
-        }
-
-        const pp = progress(metrics.process, y);
-        const nextProcess = stepped(pp, [.36, .68], processState, direction);
-        if (nextProcess !== processState) {
-          processState = nextProcess;
-          setOnlyActive(processSteps, processState);
-        }
-
-        audienceMetrics.forEach((item, i) => {
-          const ap = progress(item, y);
-          const prev = audienceStates[i] ?? -1;
-          const next = stepped(ap, [.14, .31, .48, .65, .82], prev, direction);
-          if (next !== prev) {
-            audienceStates[i] = next;
-            if (item.stage) setAudienceState(item.stage, next);
-          }
-        });
-
-        targetGeo = clamp01(y / maxScroll);
-      };
-
       const tick = () => {
         raf = 0;
-        paintStates();
-
-        /* A small independent ease keeps the background lines moving continuously
-           even when touch-scroll delivers scroll positions in uneven bursts. */
-        currentGeo += (targetGeo - currentGeo) * .18;
-        if (Math.abs(targetGeo - currentGeo) < .00002) currentGeo = targetGeo;
-        applyGeo(currentGeo);
-
-        if (Math.abs(targetGeo - currentGeo) > .00002) raf = requestAnimationFrame(tick);
+        current += (target - current) * .18;
+        if (Math.abs(target - current) < .00002) current = target;
+        apply(current);
+        if (Math.abs(target - current) > .00002) raf = requestAnimationFrame(tick);
       };
 
       const request = () => {
+        target = clamp01(window.scrollY / maxScroll);
         if (!raf) raf = requestAnimationFrame(tick);
       };
 
-      const remeasure = () => {
-        measure();
-        worldState = -1;
-        processState = -1;
-        audienceStates = audienceSections.map(() => -1);
-        betweenMet = false;
-        betweenMessage = false;
-        differenceNew = false;
-        if (betweenStage) betweenStage.classList.remove('mw-met', 'mw-message');
-        if (differenceStage) differenceStage.classList.remove('mw-new');
-        currentGeo = targetGeo = clamp01(window.scrollY / maxScroll);
-        request();
-      };
-
       window.addEventListener('scroll', request, { passive: true });
-      window.addEventListener('orientationchange', () => setTimeout(remeasure, 180));
+      window.addEventListener('orientationchange', () => setTimeout(() => { measure(); apply(current); }, 180));
       window.addEventListener('resize', () => {
-        /* Ignore address-bar-only height changes. Rebuild only when width/orientation changes. */
         if (Math.abs(window.innerWidth - stableW) <= 2) return;
-        remeasure();
+        measure();
+        apply(current);
       });
       window.addEventListener('load', () => {
-        remeasure();
-        setTimeout(remeasure, 180);
+        measure();
+        apply(current);
       });
 
-      remeasure();
+      apply(current);
     })();
   </script>
 
