@@ -2044,6 +2044,41 @@
       }
     }
 
+
+    /* =========================================================
+       AUG 16 — MOBILE HUMAN-PACE + BACKDROP MOTION TUNING
+       Keep the manual-fixed anti-jitter architecture unchanged.
+       Only shorten the scroll travel moderately and isolate the decorative
+       background layers so their compositor motion cannot disturb typography.
+       ========================================================= */
+    @media (max-width: 760px) {
+      /* Human-paced: shorter than the previous stability pass, but not snappy. */
+      .world { min-height: 150svh !important; }
+      .between { min-height: 150svh !important; }
+      .process { min-height: 205svh !important; }
+      .audience-chapter { min-height: 330svh !important; }
+
+      /* Preserve the proven no-jitter text/stage system exactly as-is. */
+      .ambient {
+        isolation: isolate;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      .glow {
+        will-change: transform !important;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-origin: center center;
+      }
+      .geo-layer {
+        will-change: transform !important;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-origin: center center;
+      }
+    }
+
 </style>
 </head>
 
@@ -2938,10 +2973,12 @@
 
       const renderProcess = (y) => {
         const p = progressFor(metrics.process, y);
-        const out1 = smooth(clamp01((p - .24) / .16));
-        const in2  = smooth(clamp01((p - .30) / .16));
-        const out2 = smooth(clamp01((p - .57) / .16));
-        const in3  = smooth(clamp01((p - .63) / .16));
+        /* Start the hand-offs a little earlier and let them overlap gently.
+           This removes the long holds without making the copy rush. */
+        const out1 = smooth(clamp01((p - .18) / .17));
+        const in2  = smooth(clamp01((p - .24) / .17));
+        const out2 = smooth(clamp01((p - .51) / .17));
+        const in3  = smooth(clamp01((p - .57) / .17));
         const vis = [1 - out1, in2 * (1 - out2), in3];
         processSteps.forEach((step, i) => {
           step.style.opacity = String(clamp01(vis[i] || 0));
@@ -2957,22 +2994,23 @@
 
       const renderAudience = (item, y) => {
         const p = progressFor(item, y);
-        const introIn = smooth(clamp01(p / .07));
-        const introOut = smooth(clamp01((p - .15) / .09));
+        const introIn = smooth(clamp01(p / .065));
+        const introOut = smooth(clamp01((p - .135) / .085));
         if (item.core) item.core.style.opacity = String(introIn * (1 - introOut));
 
-        const signalIn = smooth(clamp01((p - .05) / .10));
-        const signalOut = smooth(clamp01((p - .84) / .08));
+        const signalIn = smooth(clamp01((p - .045) / .095));
+        const signalOut = smooth(clamp01((p - .88) / .075));
         if (item.signal) {
           item.signal.style.opacity = String(signalIn * (1 - signalOut) * .82);
           item.signal.style.transform = `translateX(-50%) scaleX(${signalIn.toFixed(3)})`;
         }
 
         const windows = [
-          [.18, .23, .34, .38],
-          [.38, .43, .54, .58],
-          [.58, .63, .74, .78],
-          [.78, .83, .92, .96]
+          /* tiny overlap between neighbours = a natural crossfade, not a jump */
+          [.16, .21, .31, .36],
+          [.34, .39, .49, .54],
+          [.52, .57, .67, .72],
+          [.70, .75, .85, .90]
         ];
         item.nodes.forEach((node, i) => {
           const w = windows[i];
@@ -2981,31 +3019,47 @@
         });
 
         const benefitP = clamp01((p - windows[0][0]) / (windows[3][3] - windows[0][0]));
-        const progressVis = smooth(clamp01((p - .17) / .06)) * (1 - smooth(clamp01((p - .975) / .025)));
+        const progressVis = smooth(clamp01((p - .15) / .06)) * (1 - smooth(clamp01((p - .955) / .035)));
         if (item.progress) item.progress.style.opacity = String(progressVis * .9);
         if (item.progressBar) item.progressBar.style.transform = `scaleX(${benefitP.toFixed(3)})`;
 
-        const closeIn = smooth(clamp01((p - .945) / .05));
+        const closeIn = smooth(clamp01((p - .875) / .085));
         if (item.close) item.close.style.opacity = String(closeIn);
       };
 
-      const renderGeo = (y) => {
-        if (!topo || !orbits || !coords) return;
+      const renderBackdrop = (y) => {
         const p = clamp01(y / maxScroll);
-        const a = Math.sin(p * Math.PI * 3.4);
-        const b = Math.cos(p * Math.PI * 2.8 + .35);
-        const c = Math.sin(p * Math.PI * 2.2 + 1.05);
-        topo.style.transform = `translate3d(${(-2.2 + p * 5.4 + a * .75).toFixed(2)}vw, ${(-1.4 + p * 3.8 + b * .48).toFixed(2)}vh, 0)`;
-        orbits.style.transform = `translate3d(${(2.6 - p * 5.8 + b * .68).toFixed(2)}vw, ${(1.8 - p * 3.9 + c * .46).toFixed(2)}vh, 0)`;
-        coords.style.transform = `translate3d(${(-1.1 + p * 3.4 + c * .52).toFixed(2)}vw, ${(1.2 - p * 2.8 + a * .38).toFixed(2)}vh, 0)`;
-      };
 
-      const holdGlows = () => {
-        if (!pinkGlow || !greenGlow) return;
-        pinkGlow.style.transform = 'translate3d(-10vw, 11vh, 0) scale(1.10)';
-        greenGlow.style.transform = 'translate3d(11vw, -9vh, 0) scale(1.11)';
-        pinkGlow.style.opacity = '.82';
-        greenGlow.style.opacity = '.80';
+        /* All backdrop motion is transform-only and fed by the SAME smoothed visualY
+           used by the typography. No second RAF, no layout reads, no text-layer repaint. */
+        const a = Math.sin(p * Math.PI * 4.2);
+        const b = Math.cos(p * Math.PI * 3.35 + .42);
+        const c = Math.sin(p * Math.PI * 2.75 + 1.08);
+
+        if (topo && orbits && coords) {
+          const topoRot = -0.45 + a * 0.52 + p * 0.70;
+          const orbitRot = 0.55 - b * 0.58 - p * 0.62;
+          const coordRot = -0.18 + c * 0.38 + p * 0.30;
+          topo.style.transform = `translate3d(${(-2.4 + p * 6.1 + a * 1.10).toFixed(2)}vw, ${(-1.6 + p * 4.3 + b * .72).toFixed(2)}vh, 0) rotate(${topoRot.toFixed(3)}deg) scale(${(1.015 + c * .006).toFixed(4)})`;
+          orbits.style.transform = `translate3d(${(2.9 - p * 6.4 + b * 1.02).toFixed(2)}vw, ${(2.0 - p * 4.4 + c * .70).toFixed(2)}vh, 0) rotate(${orbitRot.toFixed(3)}deg) scale(${(1.018 - a * .006).toFixed(4)})`;
+          coords.style.transform = `translate3d(${(-1.3 + p * 3.9 + c * .82).toFixed(2)}vw, ${(1.4 - p * 3.2 + a * .62).toFixed(2)}vh, 0) rotate(${coordRot.toFixed(3)}deg) scale(${(1.010 + b * .004).toFixed(4)})`;
+        }
+
+        /* Restore the two MIDWELT 'fires'. Keep opacity fixed: moving only the
+           compositor transform is much cheaper and avoids brightness flicker. */
+        if (pinkGlow && greenGlow) {
+          const meeting = 1 - Math.min(1, Math.abs(p - .43) / .23);
+          const pinkX = -10 - p * 16 - meeting * 5.0 + a * 5.4;
+          const pinkY = 11 + p * 17 + meeting * 3.4 + b * 4.1;
+          const greenX = 11 + p * 15 + meeting * 5.2 - b * 5.0;
+          const greenY = -9 - p * 15 - meeting * 2.6 - c * 4.0;
+          const pinkScale = 1.10 + meeting * .10 + c * .025;
+          const greenScale = 1.11 + meeting * .10 - a * .024;
+          pinkGlow.style.transform = `translate3d(${pinkX.toFixed(2)}vw, ${pinkY.toFixed(2)}vh, 0) scale(${pinkScale.toFixed(4)})`;
+          greenGlow.style.transform = `translate3d(${greenX.toFixed(2)}vw, ${greenY.toFixed(2)}vh, 0) scale(${greenScale.toFixed(4)})`;
+          pinkGlow.style.opacity = '.82';
+          greenGlow.style.opacity = '.80';
+        }
       };
 
       const tick = (now) => {
@@ -3030,7 +3084,7 @@
         renderDifference(visualY);
         renderProcess(visualY);
         audienceMetrics.forEach((m) => renderAudience(m, visualY));
-        renderGeo(visualY);
+        renderBackdrop(visualY);
 
         if (Math.abs(targetY - visualY) > .08) raf = requestAnimationFrame(tick);
       };
@@ -3061,14 +3115,13 @@
       window.addEventListener('orientationchange', () => setTimeout(remeasure, 220));
       window.addEventListener('load', () => { remeasure(); setTimeout(remeasure, 180); });
 
-      holdGlows();
       measure();
       renderWorld(visualY);
       renderBetween(visualY);
       renderDifference(visualY);
       renderProcess(visualY);
       audienceMetrics.forEach((m) => renderAudience(m, visualY));
-      renderGeo(visualY);
+      renderBackdrop(visualY);
       request();
     })();
   </script>
