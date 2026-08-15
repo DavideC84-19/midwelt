@@ -1317,6 +1317,343 @@
       }
     }
 
+
+
+    /* =========================================================
+       V2 — FOR ARTISTS / FOR BRANDS
+       Sequential benefit reel. One message at a time for clarity,
+       with a subtle accent trace instead of a central dot.
+    ========================================================= */
+    .audience-chapter {
+      min-height: 230svh;
+      padding: 0;
+      align-items: stretch;
+      isolation: isolate;
+    }
+
+    .audience-stage {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100svh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .audience-stage::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(68vw, 920px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: .055;
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    .audience-artists .audience-stage::before {
+      background: radial-gradient(circle, rgba(255,20,200,.36), rgba(255,20,200,.04) 48%, transparent 72%);
+    }
+
+    .audience-brands .audience-stage::before {
+      background: radial-gradient(circle, rgba(190,255,0,.30), rgba(190,255,0,.035) 48%, transparent 72%);
+    }
+
+    .audience-label {
+      position: absolute;
+      top: clamp(30px, 5.5vh, 62px);
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      font-size: clamp(15px, 1.2vw, 20px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: .96;
+      z-index: 7;
+    }
+
+    .audience-artists .audience-label { color: var(--pink); }
+    .audience-brands .audience-label { color: var(--green); }
+
+    .audience-signal {
+      position: absolute;
+      top: clamp(68px, 10.5vh, 112px);
+      left: 50%;
+      width: min(220px, 34vw);
+      height: 1px;
+      transform: translateX(-50%) scaleX(0);
+      transform-origin: center;
+      opacity: 0;
+      z-index: 6;
+      will-change: transform, opacity;
+    }
+
+    .audience-artists .audience-signal {
+      background: linear-gradient(90deg, transparent, var(--pink), transparent);
+    }
+
+    .audience-brands .audience-signal {
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+
+    .audience-core {
+      position: absolute;
+      left: 50%;
+      top: 49%;
+      width: min(960px, 86vw);
+      transform: translate3d(-50%, -50%, 0);
+      text-align: center;
+      z-index: 4;
+      will-change: opacity, transform;
+    }
+
+    .audience-headline {
+      margin: 0;
+      font-size: clamp(44px, 6.2vw, 96px);
+      line-height: .95;
+      letter-spacing: -.06em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .audience-headline span { display: block; }
+
+    .audience-kicker {
+      margin: clamp(22px, 3vh, 34px) auto 0;
+      max-width: 720px;
+      color: rgba(244,244,241,.72);
+      font-size: clamp(15px, 1.45vw, 20px);
+      line-height: 1.38;
+      letter-spacing: -.025em;
+      font-weight: 500;
+      text-transform: none;
+    }
+
+    .audience-reel {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(920px, 86vw);
+      height: 260px;
+      transform: translate3d(-50%, -50%, 0);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .audience-node {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+      transform: translate3d(0, 22px, 0);
+      will-change: opacity, transform;
+    }
+
+    .audience-count {
+      display: block;
+      margin-bottom: 16px;
+      color: rgba(244,244,241,.42);
+      font-size: clamp(11px, .85vw, 13px);
+      line-height: 1;
+      letter-spacing: .14em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .audience-node strong {
+      display: block;
+      max-width: 860px;
+      font-size: clamp(35px, 5vw, 78px);
+      line-height: .94;
+      letter-spacing: -.055em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .audience-node small {
+      display: block;
+      max-width: 620px;
+      margin-top: 16px;
+      color: rgba(244,244,241,.68);
+      font-size: clamp(14px, 1.25vw, 18px);
+      line-height: 1.35;
+      letter-spacing: -.015em;
+      text-transform: none;
+    }
+
+    .audience-artists .audience-node strong { color: var(--pink); }
+    .audience-brands .audience-node strong { color: var(--green); }
+
+    .audience-progress {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(68px, 9vh, 104px);
+      width: min(340px, 54vw);
+      height: 1px;
+      transform: translateX(-50%);
+      background: rgba(244,244,241,.15);
+      opacity: 0;
+      z-index: 6;
+    }
+
+    .audience-progress span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
+    }
+
+    .audience-artists .audience-progress span { background: var(--pink); }
+    .audience-brands .audience-progress span { background: var(--green); }
+
+    .audience-close {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(1060px, 90vw);
+      transform: translate3d(-50%, calc(-50% + 24px), 0);
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(30px, 4vw, 66px);
+      line-height: .98;
+      letter-spacing: -.05em;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      opacity: 0;
+      will-change: opacity, transform;
+      z-index: 6;
+    }
+
+    .audience-close span { display: block; }
+    .audience-close span + span { margin-top: .22em; font-size: .74em; letter-spacing: -.035em; }
+
+    @media (max-width: 760px) {
+      .audience-chapter { min-height: 245svh; }
+
+      .audience-label {
+        top: 30px;
+        font-size: 12px;
+        letter-spacing: .15em;
+      }
+
+      .audience-signal {
+        top: 68px;
+        width: 116px;
+      }
+
+      .audience-core {
+        top: 47%;
+        width: 92vw;
+      }
+
+      .audience-headline {
+        font-size: clamp(34px, 10.25vw, 46px);
+        line-height: .96;
+      }
+
+      .audience-kicker {
+        max-width: 84vw;
+        margin-top: 18px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .audience-reel {
+        top: 49%;
+        width: 90vw;
+        height: 290px;
+      }
+
+      .audience-count {
+        margin-bottom: 14px;
+        font-size: 10px;
+      }
+
+      .audience-node strong {
+        max-width: 90vw;
+        font-size: clamp(31px, 9.6vw, 43px);
+        line-height: .95;
+      }
+
+      .audience-node small {
+        max-width: 82vw;
+        margin-top: 13px;
+        font-size: 12.5px;
+        line-height: 1.34;
+      }
+
+      .audience-progress {
+        bottom: 72px;
+        width: 54vw;
+      }
+
+      .audience-close {
+        width: 92vw;
+        font-size: clamp(25px, 7.8vw, 35px);
+        line-height: 1;
+      }
+
+      /* Keep these two sensitive scroll chapters on the main text raster layer.
+         No transforms on the final WORLD line or the BETWEEN message means mobile
+         Chrome/Safari cannot re-rasterize them mid-scroll and create shimmer/jump. */
+      .world-lines .world-line:nth-child(3) {
+        transform: none !important;
+        will-change: opacity;
+        backface-visibility: visible;
+        -webkit-backface-visibility: visible;
+      }
+
+      .between-message {
+        transform: translate3d(-50%, 0, 0) !important;
+        will-change: opacity;
+        backface-visibility: visible;
+        -webkit-backface-visibility: visible;
+      }
+    }
+
+
+    /* FINAL MOBILE QA — align sticky geometry with scroll math.
+       The generic mobile .section padding was still being applied to sticky chapters,
+       so the sticky stage released before the JS progress reached the end. That is the
+       real source of the remaining CONTENT / BETWEEN jump and also added hidden scroll. */
+    @media (max-width: 760px) {
+      .world,
+      .between,
+      .difference,
+      .process {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      /* Keep a short but real animation range for WE CREATE after removing the
+         accidental padding-based travel. */
+      .difference {
+        min-height: 109.24svh;
+      }
+
+      /* Centre the BETWEEN message without any transform/compositor layer. */
+      .between-message {
+        left: 3vw;
+        right: 3vw;
+        width: auto;
+        transform: none !important;
+      }
+    }
 </style>
 </head>
 
@@ -1448,6 +1785,8 @@
       </div>
     </section>
 
+
+
     <section class="section process" id="processSection">
       <div class="process-stage">
         <div class="inner">
@@ -1461,6 +1800,100 @@
             <span class="process-copy">WE <span class="green">BRING</span><br />THE COLLABORATION TO LIFE</span>
           </p>
         </div>
+      </div>
+    </section>
+
+    <!-- V2: FOR ARTISTS -->
+    <section class="section audience-chapter audience-artists" id="artistsBenefitsSection">
+      <div class="audience-stage">
+        <p class="audience-label">FOR ARTISTS.</p>
+        <div class="audience-signal" aria-hidden="true"></div>
+
+        <div class="audience-core">
+          <h2 class="audience-headline">
+            <span>COMMERCIAL OPPORTUNITIES</span>
+            <span class="pink">WITHOUT COMPROMISING</span>
+            <span>WHO YOU ARE.</span>
+          </h2>
+          <p class="audience-kicker">The right collaboration should extend an artist's world, not dilute it.</p>
+        </div>
+
+        <div class="audience-reel" aria-label="Benefits for artists">
+          <div class="audience-node">
+            <span class="audience-count">01 / 04</span>
+            <strong>CREATIVE FREEDOM.</strong>
+            <small>Your language remains yours.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">02 / 04</span>
+            <strong>THE RIGHT CONNECTIONS.</strong>
+            <small>Fit before reach.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">03 / 04</span>
+            <strong>NEW CONTEXTS.</strong>
+            <small>Products, spaces, films, experiences.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">04 / 04</span>
+            <strong>LONG TERM VALUE.</strong>
+            <small>Beyond a single endorsement.</small>
+          </div>
+        </div>
+
+        <div class="audience-progress" aria-hidden="true"><span></span></div>
+
+        <p class="audience-close">
+          <span>THE RIGHT OPPORTUNITY ADAPTS TO YOUR WORK.</span>
+          <span>NOT THE OTHER WAY AROUND.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- V2: FOR BRANDS -->
+    <section class="section audience-chapter audience-brands" id="brandsBenefitsSection">
+      <div class="audience-stage">
+        <p class="audience-label">FOR BRANDS.</p>
+        <div class="audience-signal" aria-hidden="true"></div>
+
+        <div class="audience-core">
+          <h2 class="audience-headline">
+            <span>DON'T JUST</span>
+            <span>BORROW CULTURE.</span>
+            <span class="green">CONTRIBUTE TO IT.</span>
+          </h2>
+          <p class="audience-kicker">Invite artistic thinking into the idea, not only into the execution.</p>
+        </div>
+
+        <div class="audience-reel" aria-label="Benefits for brands">
+          <div class="audience-node">
+            <span class="audience-count">01 / 04</span>
+            <strong>ORIGINAL PERSPECTIVES.</strong>
+            <small>Artists shape the thinking.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">02 / 04</span>
+            <strong>CULTURAL RELEVANCE.</strong>
+            <small>Connections people can believe.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">03 / 04</span>
+            <strong>REAL DIFFERENTIATION.</strong>
+            <small>Create what a template cannot.</small>
+          </div>
+          <div class="audience-node">
+            <span class="audience-count">04 / 04</span>
+            <strong>AUTHENTIC CONNECTION.</strong>
+            <small>Alignment before activation.</small>
+          </div>
+        </div>
+
+        <div class="audience-progress" aria-hidden="true"><span></span></div>
+
+        <p class="audience-close">
+          <span>DON'T FIND AN ARTIST FOR THE CAMPAIGN.</span>
+          <span>FIND THE COLLABORATION WORTH CREATING.</span>
+        </p>
       </div>
     </section>
 
@@ -1606,7 +2039,6 @@
 
       let ticking = false;
       let betweenVisualProgress = null;
-      let betweenLastFrameTime = performance.now();
 
       function update() {
         ticking = false;
@@ -1615,6 +2047,9 @@
         const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
         const global = clamp(window.scrollY / maxScroll);
         const mobile = window.innerWidth <= 760;
+        const sensitiveMobileText = mobile &&
+          window.scrollY >= worldSectionTop - stableViewportHeight * 0.08 &&
+          window.scrollY <= betweenSectionTop + betweenSectionTravel + stableViewportHeight * 0.16;
 
         {
           const meeting =
@@ -1624,24 +2059,32 @@
           const endDrop = clamp((global - 0.82) / 0.18);
 
           if (mobile) {
-            // Mobile ambient motion: same visual idea as desktop, but with smaller
-            // travel/scale ranges so the large blurred layers stay smooth on touch scroll.
-            const driftA = Math.sin(global * Math.PI * 4.2);
-            const driftB = Math.cos(global * Math.PI * 3.6);
-            const pulse = 0.035 * Math.sin(global * Math.PI * 5.0);
+            if (sensitiveMobileText) {
+              // Large blurred layers + moving SVGs were competing for the mobile
+              // compositor exactly while the two sensitive text chapters animate.
+              // Keep the same ambient look, but hold these glows still for those frames.
+              pinkGlow.style.transform = `translate3d(-10vw, 11vh, 0) scale(1.10)`;
+              greenGlow.style.transform = `translate3d(11vw, -9vh, 0) scale(1.11)`;
+              pinkGlow.style.opacity = '0.82';
+              greenGlow.style.opacity = '0.80';
+            } else {
+              const driftA = Math.sin(global * Math.PI * 4.2);
+              const driftB = Math.cos(global * Math.PI * 3.6);
+              const pulse = 0.035 * Math.sin(global * Math.PI * 5.0);
 
-            const pinkX = -3 - global * 15 - meeting * 10 + driftA * 4.5;
-            const pinkY = 3 + global * 18 + meeting * 8 + driftB * 3.5 + endDrop * 8;
-            const greenX = 4 + global * 14 + meeting * 11 - driftB * 4.2;
-            const greenY = -3 - global * 15 - meeting * 7 - driftA * 3.2 + endDrop * 10;
+              const pinkX = -3 - global * 15 - meeting * 10 + driftA * 4.5;
+              const pinkY = 3 + global * 18 + meeting * 8 + driftB * 3.5 + endDrop * 8;
+              const greenX = 4 + global * 14 + meeting * 11 - driftB * 4.2;
+              const greenY = -3 - global * 15 - meeting * 7 - driftA * 3.2 + endDrop * 10;
 
-            pinkGlow.style.transform =
-              `translate3d(${pinkX.toFixed(2)}vw, ${pinkY.toFixed(2)}vh, 0) scale(${(1.02 + meeting * 0.16 + pulse).toFixed(3)})`;
-            greenGlow.style.transform =
-              `translate3d(${greenX.toFixed(2)}vw, ${greenY.toFixed(2)}vh, 0) scale(${(1.04 + meeting * 0.17 - pulse).toFixed(3)})`;
+              pinkGlow.style.transform =
+                `translate3d(${pinkX.toFixed(2)}vw, ${pinkY.toFixed(2)}vh, 0) scale(${(1.02 + meeting * 0.16 + pulse).toFixed(3)})`;
+              greenGlow.style.transform =
+                `translate3d(${greenX.toFixed(2)}vw, ${greenY.toFixed(2)}vh, 0) scale(${(1.04 + meeting * 0.17 - pulse).toFixed(3)})`;
 
-            pinkGlow.style.opacity = String(0.76 + meeting * 0.13 - endDrop * 0.08);
-            greenGlow.style.opacity = String(0.74 + meeting * 0.13 - endDrop * 0.09);
+              pinkGlow.style.opacity = String(0.76 + meeting * 0.13 - endDrop * 0.08);
+              greenGlow.style.opacity = String(0.74 + meeting * 0.13 - endDrop * 0.09);
+            }
           } else {
             const pinkX =
               -8 - global * 28 - meeting * 23 +
@@ -1687,10 +2130,10 @@
           line.style.opacity = String(lerp(0.16, 1, emphasis));
 
           if (mobile && index === 2) {
-            // CONTENT IS INFINITE: opacity-only on mobile. Keeping this line on a
-            // fixed compositor position removes the last visible bounce/raster shimmer
-            // while preserving the exact dissolve/emphasis behavior.
-            line.style.transform = 'translate3d(0, 0, 0)';
+            // Do not write transform at all for CONTENT IS INFINITE on mobile.
+            // Even a zero 3D transform promotes the glyphs to a rasterized compositor
+            // layer, which can shimmer when the browser toolbar changes during scroll.
+            line.style.removeProperty('transform');
           } else {
             const worldY = lerp(7, 0, emphasis);
             line.style.transform = mobile
@@ -1705,22 +2148,12 @@
 
         if (betweenVisualProgress === null) betweenVisualProgress = betweenTarget;
 
-        if (mobile) {
-          // Mobile scroll events arrive in uneven bursts. Smooth toward the stable
-          // document-space target with a time-based, no-overshoot interpolation.
-          // This preserves the exact scroll-led effect, but removes the catch/freeze
-          // at the intersection and the tiny rebound when the finger stops.
-          const now = performance.now();
-          const dt = Math.min(48, Math.max(8, now - betweenLastFrameTime));
-          betweenLastFrameTime = now;
-          const alpha = 1 - Math.exp(-dt / 52);
-          betweenVisualProgress = lerp(betweenVisualProgress, betweenTarget, alpha);
-          if (Math.abs(betweenTarget - betweenVisualProgress) < 0.00025) {
-            betweenVisualProgress = betweenTarget;
-          }
-        } else {
-          betweenVisualProgress = lerp(betweenVisualProgress, betweenTarget, 0.18);
-        }
+        // On mobile, document-space progress is already stable. A second JS inertia
+        // layer makes the words/message continue moving after touch momentum stops,
+        // which reads as a catch or rebound. Map directly to scroll instead.
+        betweenVisualProgress = mobile
+          ? betweenTarget
+          : lerp(betweenVisualProgress, betweenTarget, 0.18);
 
         const meet = mobile
           ? clamp((betweenVisualProgress - 0.035) / 0.41)
@@ -1739,17 +2172,17 @@
         // Mobile: let the two worlds pass slightly through each other before
         // dissolving. This removes the hard "touch" point without changing
         // the following MIDWELT message or the desktop choreography.
-        const startSpread = mobile ? 3.0 : 4.6;
-        const endApproach = mobile ? 4.25 : 1.25;
+        const startSpread = mobile ? stableViewportWidth * 0.030 : 4.6;
+        const endApproach = mobile ? stableViewportWidth * 0.0425 : 1.25;
         const artistsX = lerp(-startSpread, endApproach, smoothMeet);
         const brandsX = lerp(startSpread, -endApproach, smoothMeet);
 
         artistsWord.style.transform = mobile
-          ? `translate3d(${artistsX.toFixed(2)}vw, 0, 0)`
+          ? `translate3d(${artistsX.toFixed(1)}px, 0, 0)`
           : `translateX(${artistsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
         brandsWord.style.transform = mobile
-          ? `translate3d(${brandsX.toFixed(2)}vw, 0, 0)`
+          ? `translate3d(${brandsX.toFixed(1)}px, 0, 0)`
           : `translateX(${brandsX}vw) scale(${1 + smoothMeet * 0.015})`;
 
         const wordOpacity = mobile
@@ -1770,17 +2203,17 @@
         betweenMessage.style.opacity =
           String(smoothReveal);
 
-        const messageY = mobile
-          ? lerp(10, 0, smoothReveal)
-          : lerp(20, 0, smoothReveal);
+        const messageY = lerp(20, 0, smoothReveal);
 
-        betweenMessage.style.transform = mobile
-          ? `translate3d(-50%, ${messageY.toFixed(2)}px, 0)`
-          : `translateX(-50%) translateY(${messageY}px)`;
+        // The message is opacity-only on mobile. Its physical position never changes,
+        // eliminating the raster catch that was visible as it appeared.
+        if (mobile) {
+          betweenMessage.style.removeProperty('transform');
+        } else {
+          betweenMessage.style.transform = `translateX(-50%) translateY(${messageY}px)`;
+        }
 
-        // Continue rendering until the visual progress has gently caught the latest
-        // scroll target. The interpolation never overshoots, so there is no rebound.
-        if (Math.abs(betweenTarget - betweenVisualProgress) > (mobile ? 0.00035 : 0.0008)) {
+        if (!mobile && Math.abs(betweenTarget - betweenVisualProgress) > 0.0008) {
           requestUpdate();
         }
 
@@ -1880,6 +2313,7 @@
           stableViewportWidth = window.innerWidth;
           stableViewportHeight = window.innerHeight;
           refreshWorldMetrics();
+          refreshBetweenMetrics();
           fitSpecialLines();
           requestUpdate();
         }, 160);
@@ -1900,14 +2334,31 @@
       const coords = document.getElementById("geoCoordinates");
       if (!topo || !orbits || !coords) return;
 
+      const world = document.getElementById("worldSection");
+      const between = document.getElementById("betweenSection");
       let ticking = false;
 
       const updateGeo = () => {
         const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
         const p = Math.min(1, Math.max(0, window.scrollY / maxScroll));
         const mobile = window.innerWidth <= 760;
+        let holdGeo = false;
+        if (mobile && world && between) {
+          const worldTop = window.scrollY + world.getBoundingClientRect().top;
+          const betweenRect = between.getBoundingClientRect();
+          const betweenTop = window.scrollY + betweenRect.top;
+          const betweenBottom = betweenTop + betweenRect.height;
+          holdGeo = window.scrollY >= worldTop - window.innerHeight * .08 &&
+                    window.scrollY <= betweenBottom - window.innerHeight * .80;
+        }
 
-        if (mobile) {
+        if (mobile && holdGeo) {
+          // Hold the decorative SVG layers still while the sensitive mobile typography
+          // is active. Their appearance remains, but they no longer compete for frame time.
+          topo.style.transform = 'translate3d(0,0,0) scale(1.035)';
+          orbits.style.transform = 'translate3d(0,0,0) scale(1.030)';
+          coords.style.transform = 'translate3d(0,0,0) scale(1.020)';
+        } else if (mobile) {
           // Three lightweight parallax layers. Different phase/direction makes the
           // background feel alive without touching page layout or text animation.
           const waveA = Math.sin(p * Math.PI * 4.0);
@@ -1938,5 +2389,124 @@
     })();
   </script>
 
+
+
+  <script>
+    (() => {
+      const clamp01 = v => Math.max(0, Math.min(1, v));
+      const smooth = t => t * t * (3 - 2 * t);
+      const chapters = [...document.querySelectorAll('.audience-chapter')];
+      let metrics = [];
+      let raf = 0;
+      let stableH = window.innerHeight;
+      let stableW = window.innerWidth;
+
+      const measure = () => {
+        metrics = chapters.map(section => {
+          const r = section.getBoundingClientRect();
+          return {
+            section,
+            top: window.scrollY + r.top,
+            travel: Math.max(1, r.height - stableH)
+          };
+        });
+      };
+
+      const bell = (p, start, end, fade = .16) => {
+        if (p <= start || p >= end) return 0;
+        const span = end - start;
+        const local = (p - start) / span;
+        const edge = Math.min(.46, fade);
+        if (local < edge) return smooth(clamp01(local / edge));
+        if (local > 1 - edge) return smooth(clamp01((1 - local) / edge));
+        return 1;
+      };
+
+      const paint = () => {
+        raf = 0;
+        metrics.forEach(({section, top, travel}) => {
+          const p = clamp01((window.scrollY - top) / travel);
+          const core = section.querySelector('.audience-core');
+          const signal = section.querySelector('.audience-signal');
+          const nodes = [...section.querySelectorAll('.audience-node')];
+          const progress = section.querySelector('.audience-progress');
+          const progressBar = progress && progress.querySelector('span');
+          const close = section.querySelector('.audience-close');
+
+          // Intro has its own clean screen, then leaves completely before benefits begin.
+          const introIn = smooth(clamp01(p / .10));
+          const introOut = smooth(clamp01((p - .18) / .09));
+          const introVis = introIn * (1 - introOut);
+          core.style.opacity = String(introVis);
+          core.style.transform = `translate3d(-50%, calc(-50% + ${(18 - introIn * 18 - introOut * 18).toFixed(2)}px), 0)`;
+
+          // A thin accent trace replaces the old glowing dot.
+          const signalIn = smooth(clamp01((p - .06) / .12));
+          const signalOut = smooth(clamp01((p - .76) / .10));
+          signal.style.opacity = String(signalIn * (1 - signalOut) * .82);
+          signal.style.transform = `translateX(-50%) scaleX(${signalIn.toFixed(3)})`;
+
+          // Four benefits, deliberately separated so text never stacks on itself.
+          const windows = [
+            [.285, .385],
+            [.405, .505],
+            [.525, .625],
+            [.645, .745]
+          ];
+          nodes.forEach((node, i) => {
+            const [a, b] = windows[i];
+            const vis = bell(p, a, b, .22);
+            const local = clamp01((p - a) / (b - a));
+            const y = 22 - local * 44;
+            node.style.opacity = String(vis);
+            node.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+          });
+
+          const benefitStart = windows[0][0];
+          const benefitEnd = windows[windows.length - 1][1];
+          const benefitP = clamp01((p - benefitStart) / (benefitEnd - benefitStart));
+          const progressVis = smooth(clamp01((p - .25) / .06)) * (1 - smooth(clamp01((p - .76) / .06)));
+          if (progress) progress.style.opacity = String(progressVis * .9);
+          if (progressBar) progressBar.style.transform = `scaleX(${benefitP.toFixed(3)})`;
+
+          // Final statement gets a clean screen as well.
+          const closeIn = smooth(clamp01((p - .79) / .12));
+          close.style.opacity = String(closeIn);
+          close.style.transform = `translate3d(-50%, calc(-50% + ${(24 - closeIn * 24).toFixed(2)}px), 0)`;
+        });
+      };
+
+      const request = () => {
+        if (!raf) raf = requestAnimationFrame(paint);
+      };
+
+      window.addEventListener('scroll', request, {passive:true});
+      window.addEventListener('resize', () => {
+        const w = window.innerWidth;
+        const widthChanged = Math.abs(w - stableW) > 2;
+        if (w <= 760 && !widthChanged) return;
+        stableW = w;
+        stableH = window.innerHeight;
+        measure();
+        request();
+      });
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          stableW = window.innerWidth;
+          stableH = window.innerHeight;
+          measure();
+          request();
+        }, 180);
+      });
+      window.addEventListener('load', () => {
+        stableH = window.innerHeight;
+        stableW = window.innerWidth;
+        measure();
+        request();
+      });
+      measure();
+      request();
+    })();
+  </script>
 </body>
 </html>
